@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vinilos</string>
+    <string name="title_home">Home</string>
+    <string name="title_artists">Artists</string>
+    <string name="title_albums">Albums</string>
+    <string name="title_collectors">Collectors</string>
+    <string name="album_details">Album Details</string>
+</resources> 

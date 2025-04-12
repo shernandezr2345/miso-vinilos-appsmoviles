@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_role_selection">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.uniandes.vinilos.ui.fragments.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@+id/action_login_to_main"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.uniandes.vinilos.ui.fragments.MainFragment"
+        android:label="Main" />
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.uniandes.vinilos.ui.home.HomeFragment"
+        android:label="@string/title_home" />
+
+    <fragment
+        android:id="@+id/navigation_role_selection"
+        android:name="com.uniandes.vinilos.ui.auth.RoleSelectionFragment"
+        android:label="Select Role"
+        tools:layout="@layout/fragment_role_selection">
+        <action
+            android:id="@+id/action_roleSelection_to_albums"
+            app:destination="@id/navigation_albums"
+            app:popUpTo="@id/navigation_role_selection"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_albums"
+        android:name="com.uniandes.vinilos.ui.album.AlbumListFragment"
+        android:label="@string/title_albums">
+        <action
+            android:id="@+id/action_albumListFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_albums_to_addAlbum"
+            app:destination="@id/navigation_add_album" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_artists"
+        android:name="com.uniandes.vinilos.ui.artists.ArtistsFragment"
+        android:label="@string/title_artists" />
+
+    <fragment
+        android:id="@+id/navigation_collectors"
+        android:name="com.uniandes.vinilos.ui.collectors.CollectorsFragment"
+        android:label="@string/title_collectors" />
+
+    <fragment
+        android:id="@+id/albumDetailFragment"
+        android:name="com.uniandes.vinilos.ui.album.AlbumDetailFragment"
+        android:label="Album Detail">
+        <argument
+            android:name="albumId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_album"
+        android:name="com.uniandes.vinilos.ui.albums.AddAlbumFragment"
+        android:label="Add Album" />
+
+</navigation> 

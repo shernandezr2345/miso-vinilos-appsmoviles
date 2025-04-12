@@ -1,36 +1,21 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("com.android.application") version "8.2.2" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13" apply false
+    id("androidx.navigation.safeargs.kotlin") version "2.7.7" apply false
 }
 
-android {
-    compileSdk = 34
-
-    defaultConfig {
-        applicationId = "com.uniandes.vinilos"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
     }
-
-    buildFeatures {
-        viewBinding = true
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.2.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
+        classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.22-1.0.17")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.48")
     }
-}
-
-dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.5")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
