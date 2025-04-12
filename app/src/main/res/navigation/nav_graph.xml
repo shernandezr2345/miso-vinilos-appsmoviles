@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/albumListFragment">
+
+    <fragment
+        android:id="@+id/albumListFragment"
+        android:name="com.uniandes.vinilos.ui.album.AlbumListFragment"
+        android:label="Albums">
+        <action
+            android:id="@+id/actionAlbumListFragmentToAlbumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumDetailFragment"
+        android:name="com.uniandes.vinilos.ui.album.AlbumDetailFragment"
+        android:label="Album Detail">
+        <argument
+            android:name="albumId"
+            app:argType="integer" />
+    </fragment>
+
+</navigation> 
