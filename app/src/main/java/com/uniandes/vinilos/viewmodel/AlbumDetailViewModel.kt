@@ -18,14 +18,14 @@ class AlbumDetailViewModel(private val repository: AlbumRepository) : ViewModel(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun loadAlbum(id: Int) {
+    fun loadAlbum(albumId: Int) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val album = repository.getAlbum(id)
-                _album.value = album
+                val albumDetail = repository.getAlbumById(albumId)
+                _album.value = albumDetail
             } catch (e: Exception) {
-                _error.value = e.message ?: "Error loading album"
+                _error.value = e.message ?: "Error loading album details"
             } finally {
                 _isLoading.value = false
             }

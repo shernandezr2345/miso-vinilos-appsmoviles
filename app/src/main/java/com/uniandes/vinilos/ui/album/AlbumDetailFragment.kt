@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.uniandes.vinilos.R
-import com.uniandes.vinilos.model.Album
 import com.uniandes.vinilos.model.Performer
 import com.uniandes.vinilos.model.Track
 import com.uniandes.vinilos.viewmodel.AlbumDetailViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlbumDetailFragment : Fragment() {
-    private lateinit var viewModel: AlbumDetailViewModel
+    private val viewModel: AlbumDetailViewModel by viewModel()
     private lateinit var tracksAdapter: TracksAdapter
     private lateinit var performersAdapter: PerformersAdapter
 
@@ -34,11 +34,8 @@ class AlbumDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val albumId = arguments?.getInt("albumId") ?: return
-
-        viewModel = ViewModelProvider(this)[AlbumDetailViewModel::class.java]
-
         setupRecyclerViews(view)
-        observeViewModel()
+        setupObservers(view)
         viewModel.loadAlbum(albumId)
     }
 
@@ -46,44 +43,60 @@ class AlbumDetailFragment : Fragment() {
         tracksAdapter = TracksAdapter()
         performersAdapter = PerformersAdapter()
 
-        view.findViewById<RecyclerView>(R.id.tracksList).apply {
+        view.findViewById<RecyclerView>(R.id.tracksRecyclerView).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = tracksAdapter
         }
 
-        view.findViewById<RecyclerView>(R.id.performersList).apply {
+        view.findViewById<RecyclerView>(R.id.performersRecyclerView).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = performersAdapter
         }
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers(view: View) {
+        val loadingProgressBar = view.findViewById<View>(R.id.loadingProgressBar)
+        val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
+        val contentView = view.findViewById<View>(R.id.contentLayout)
+        val coverImageView = view.findViewById<ImageView>(R.id.albumCoverImageView)
+        val titleTextView = view.findViewById<TextView>(R.id.albumTitleTextView)
+        val artistTextView = view.findViewById<TextView>(R.id.albumArtistTextView)
+        val genreTextView = view.findViewById<TextView>(R.id.albumGenreTextView)
+        val releaseDateTextView = view.findViewById<TextView>(R.id.albumReleaseDateTextView)
+        val descriptionTextView = view.findViewById<TextView>(R.id.albumDescriptionTextView)
+
         viewModel.album.observe(viewLifecycleOwner) { album ->
-            updateUI(album)
-        }
-    }
+            titleTextView.text = album.name
+            artistTextView.text = album.performers.firstOrNull()?.name ?: ""
+            genreTextView.text = album.genre
+            releaseDateTextView.text = album.releaseDate
+            descriptionTextView.text = album.description
 
-    private fun updateUI(album: Album) {
-        view?.apply {
-            findViewById<ImageView>(R.id.albumCover).let { imageView ->
-                Glide.with(this)
-                    .load(album.cover)
-                    .into(imageView)
-            }
-
-            findViewById<TextView>(R.id.albumName).text = album.name
-            findViewById<TextView>(R.id.albumReleaseDate).text = "Release Date: ${album.releaseDate}"
-            findViewById<TextView>(R.id.albumGenre).text = "Genre: ${album.genre}"
-            findViewById<TextView>(R.id.albumDescription).text = album.description
+            Glide.with(requireContext())
+                .load(album.cover)
+                .placeholder(R.drawable.ic_album_placeholder)
+                .error(R.drawable.ic_album_placeholder)
+                .into(coverImageView)
 
             tracksAdapter.submitList(album.tracks)
             performersAdapter.submitList(album.performers)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            loadingProgressBar.isVisible = isLoading
+            contentView.isVisible = !isLoading
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            errorTextView.text = error
+            errorTextView.isVisible = error != null
+            contentView.isVisible = error == null
         }
     }
 }
 
 class TracksAdapter : RecyclerView.Adapter<TracksAdapter.TrackViewHolder>() {
-    private var tracks = listOf<Track>()
+    private var tracks: List<Track> = emptyList()
 
     fun submitList(newTracks: List<Track>) {
         tracks = newTracks
@@ -92,7 +105,7 @@ class TracksAdapter : RecyclerView.Adapter<TracksAdapter.TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_track, parent, false)
         return TrackViewHolder(view)
     }
 
@@ -100,19 +113,21 @@ class TracksAdapter : RecyclerView.Adapter<TracksAdapter.TrackViewHolder>() {
         holder.bind(tracks[position])
     }
 
-    override fun getItemCount() = tracks.size
+    override fun getItemCount(): Int = tracks.size
 
     class TrackViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textView = view.findViewById<TextView>(android.R.id.text1)
+        private val nameTextView: TextView = view.findViewById(R.id.trackNameTextView)
+        private val durationTextView: TextView = view.findViewById(R.id.trackDurationTextView)
 
         fun bind(track: Track) {
-            textView.text = "${track.name} - ${track.duration}"
+            nameTextView.text = track.name
+            durationTextView.text = track.duration
         }
     }
 }
 
 class PerformersAdapter : RecyclerView.Adapter<PerformersAdapter.PerformerViewHolder>() {
-    private var performers = listOf<Performer>()
+    private var performers: List<Performer> = emptyList()
 
     fun submitList(newPerformers: List<Performer>) {
         performers = newPerformers
@@ -121,7 +136,7 @@ class PerformersAdapter : RecyclerView.Adapter<PerformersAdapter.PerformerViewHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PerformerViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
+            .inflate(R.layout.item_performer, parent, false)
         return PerformerViewHolder(view)
     }
 
@@ -129,13 +144,20 @@ class PerformersAdapter : RecyclerView.Adapter<PerformersAdapter.PerformerViewHo
         holder.bind(performers[position])
     }
 
-    override fun getItemCount() = performers.size
+    override fun getItemCount(): Int = performers.size
 
     class PerformerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textView = view.findViewById<TextView>(android.R.id.text1)
+        private val nameTextView: TextView = view.findViewById(R.id.performerNameTextView)
+        private val imageView: ImageView = view.findViewById(R.id.performerImageView)
 
         fun bind(performer: Performer) {
-            textView.text = performer.name
+            nameTextView.text = performer.name
+            
+            Glide.with(itemView.context)
+                .load(performer.image)
+                .placeholder(R.drawable.ic_album_placeholder)
+                .error(R.drawable.ic_album_placeholder)
+                .into(imageView)
         }
     }
 } 
