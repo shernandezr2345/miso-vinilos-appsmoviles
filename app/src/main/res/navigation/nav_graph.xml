@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/albumListFragment">
+    app:startDestination="@id/navigation_home">
 
     <fragment
-        android:id="@+id/albumListFragment"
+        android:id="@+id/navigation_home"
+        android:name="com.uniandes.vinilos.ui.home.HomeFragment"
+        android:label="@string/title_home" />
+
+    <fragment
+        android:id="@+id/navigation_artists"
+        android:name="com.uniandes.vinilos.ui.artists.ArtistsFragment"
+        android:label="@string/title_artists" />
+
+    <fragment
+        android:id="@+id/navigation_albums"
         android:name="com.uniandes.vinilos.ui.album.AlbumListFragment"
-        android:label="Albums">
-        <action
-            android:id="@+id/actionAlbumListFragmentToAlbumDetailFragment"
-            app:destination="@id/albumDetailFragment" />
-    </fragment>
+        android:label="@string/title_albums" />
+
+    <fragment
+        android:id="@+id/navigation_collectors"
+        android:name="com.uniandes.vinilos.ui.collectors.CollectorsFragment"
+        android:label="@string/title_collectors" />
 
     <fragment
         android:id="@+id/albumDetailFragment"
@@ -21,5 +33,13 @@
             android:name="albumId"
             app:argType="integer" />
     </fragment>
+
+    <action
+        android:id="@+id/action_albumListFragment_to_albumDetailFragment"
+        app:destination="@id/albumDetailFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
 </navigation> 

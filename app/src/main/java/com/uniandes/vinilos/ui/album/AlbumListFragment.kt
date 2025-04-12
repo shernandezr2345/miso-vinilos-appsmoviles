@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.uniandes.vinilos.R
 import com.uniandes.vinilos.model.Album
@@ -38,9 +40,10 @@ class AlbumListFragment : Fragment() {
 
     private fun setupRecyclerView(view: View) {
         adapter = AlbumAdapter { album ->
-            findNavController().navigate(
-                AlbumListFragmentDirections.actionAlbumListFragmentToAlbumDetailFragment(album.id)
-            )
+            val bundle = Bundle().apply {
+                putInt("albumId", album.id)
+            }
+            findNavController().navigate(R.id.action_albumListFragment_to_albumDetailFragment, bundle)
         }
 
         view.findViewById<RecyclerView>(R.id.albumsList).apply {
@@ -58,13 +61,7 @@ class AlbumListFragment : Fragment() {
 
 class AlbumAdapter(
     private val onAlbumClick: (Album) -> Unit
-) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
-    private var albums = listOf<Album>()
-
-    fun submitList(newAlbums: List<Album>) {
-        albums = newAlbums
-        notifyDataSetChanged()
-    }
+) : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -73,10 +70,8 @@ class AlbumAdapter(
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(albums[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = albums.size
 
     class AlbumViewHolder(
         view: View,
@@ -88,5 +83,15 @@ class AlbumAdapter(
             textView.text = album.name
             itemView.setOnClickListener { onAlbumClick(album) }
         }
+    }
+}
+
+class AlbumDiffCallback : DiffUtil.ItemCallback<Album>() {
+    override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
+        return oldItem == newItem
     }
 } 
