@@ -21,11 +21,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.uniandes.vinilos.R
 import com.uniandes.vinilos.models.Album
+import com.uniandes.vinilos.ui.base.BaseFragment
 import com.uniandes.vinilos.viewmodel.AlbumListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AlbumListFragment : Fragment() {
+class AlbumListFragment : BaseFragment() {
     private val viewModel: AlbumListViewModel by viewModels()
     private lateinit var adapter: AlbumAdapter
 
@@ -72,9 +73,15 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun setupFab(view: View) {
-        view.findViewById<View>(R.id.addAlbumFab).setOnClickListener {
-            // TODO: Navigate to add album screen
-            // findNavController().navigate(R.id.action_albumListFragment_to_addAlbumFragment)
+        view.findViewById<View>(R.id.addAlbumFab)?.also { fab ->
+            if (userSession.isCollector()) {
+                fab.visibility = View.VISIBLE
+                fab.setOnClickListener {
+                    findNavController().navigate(R.id.action_albums_to_addAlbum)
+                }
+            } else {
+                fab.visibility = View.GONE
+            }
         }
     }
 
