@@ -1,4 +1,4 @@
-package com.uniandes.vinilos.model
+package com.uniandes.vinilos.models
 
 data class Performer(
     val id: Int,
@@ -6,5 +6,5 @@ data class Performer(
     val image: String,
     val description: String,
     val birthDate: String? = null,
-    val creationDate: String? = null
+    val albums: List<Album> = emptyList()
 ) 

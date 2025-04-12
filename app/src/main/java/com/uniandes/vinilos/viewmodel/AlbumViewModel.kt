@@ -1,33 +1,33 @@
 package com.uniandes.vinilos.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.uniandes.vinilos.model.Album
-import com.uniandes.vinilos.network.AlbumService
-import com.uniandes.vinilos.repository.AlbumRepository
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.uniandes.vinilos.models.Album
+import com.uniandes.vinilos.data.repository.AlbumRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class AlbumViewModel(application: Application) : AndroidViewModel(application) {
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://<tu-api>/api/v1/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+@HiltViewModel
+class AlbumViewModel @Inject constructor(
+    private val repository: AlbumRepository
+) : ViewModel() {
 
-    private val service = retrofit.create(AlbumService::class.java)
-    private val repository = AlbumRepository(service)
+    private val _albums = MutableStateFlow<List<Album>>(emptyList())
+    val albums: StateFlow<List<Album>> = _albums
 
-    private val _albums = MutableLiveData<List<Album>>()
-    val albums: LiveData<List<Album>> = _albums
+    private val _selectedAlbum = MutableStateFlow<Album?>(null)
+    val selectedAlbum: StateFlow<Album?> = _selectedAlbum
 
-    fun fetchAlbums() {
+    fun loadAlbums() {
         viewModelScope.launch {
-            try {
-                _albums.value = repository.getAlbums()
-            } catch (e: Exception) {
-                // Manejo de error
-            }
+            _albums.value = repository.getAllAlbums()
         }
+    }
+
+    fun selectAlbum(album: Album) {
+        _selectedAlbum.value = album
     }
 }

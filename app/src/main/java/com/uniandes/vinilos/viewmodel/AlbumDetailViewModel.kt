@@ -4,11 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uniandes.vinilos.model.Album
-import com.uniandes.vinilos.repository.AlbumRepository
+import com.uniandes.vinilos.models.Album
+import com.uniandes.vinilos.data.repository.AlbumRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AlbumDetailViewModel(private val repository: AlbumRepository) : ViewModel() {
+@HiltViewModel
+class AlbumDetailViewModel @Inject constructor(
+    private val repository: AlbumRepository
+) : ViewModel() {
     private val _album = MutableLiveData<Album>()
     val album: LiveData<Album> = _album
 

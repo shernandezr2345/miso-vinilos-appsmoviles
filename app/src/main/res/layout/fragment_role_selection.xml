@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roles"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/roleRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/rounded_border"
+        android:padding="8dp">
+
+        <RadioButton
+            android:id="@+id/visitorRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Visitante"
+            android:padding="16dp"
+            android:background="@drawable/radio_selector"
+            android:button="@null"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/collectorRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Colleccionista"
+            android:padding="16dp"
+            android:background="@drawable/radio_selector"
+            android:button="@null"
+            android:gravity="center"/>
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout> 

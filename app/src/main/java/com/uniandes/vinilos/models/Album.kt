@@ -1,4 +1,4 @@
-package com.uniandes.vinilos.model
+package com.uniandes.vinilos.models
 
 data class Album(
     val id: Int,
@@ -8,7 +8,7 @@ data class Album(
     val description: String,
     val genre: String,
     val recordLabel: String,
-    val tracks: List<Track> = emptyList(),
-    val performers: List<Performer> = emptyList(),
-    val comments: List<Comment> = emptyList()
+    val tracks: List<Track>,
+    val comments: List<Comment>,
+    val performers: List<Performer> = emptyList()
 ) 

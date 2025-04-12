@@ -1,4 +1,4 @@
-package com.uniandes.vinilos.model
+package com.uniandes.vinilos.models
 
 data class Track(
     val id: Int,

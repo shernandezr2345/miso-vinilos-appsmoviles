@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +20,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.uniandes.vinilos.R
-import com.uniandes.vinilos.model.Album
+import com.uniandes.vinilos.models.Album
 import com.uniandes.vinilos.viewmodel.AlbumListViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AlbumListFragment : Fragment() {
-    private val viewModel: AlbumListViewModel by viewModel()
+    private val viewModel: AlbumListViewModel by viewModels()
     private lateinit var adapter: AlbumAdapter
 
     override fun onCreateView(
@@ -115,13 +118,13 @@ class AlbumAdapter(
         view: View,
         private val onAlbumClick: (Album) -> Unit
     ) : RecyclerView.ViewHolder(view) {
-        private val coverImageView: ImageView = view.findViewById(R.id.albumCoverImageView)
-        private val titleTextView: TextView = view.findViewById(R.id.albumTitleTextView)
-        private val artistTextView: TextView = view.findViewById(R.id.albumArtistTextView)
+        private val coverImageView: ImageView = view.findViewById(R.id.albumCover)
+        private val titleTextView: TextView = view.findViewById(R.id.albumTitle)
+        private val genreTextView: TextView = view.findViewById(R.id.albumGenre)
 
         fun bind(album: Album) {
             titleTextView.text = album.name
-            artistTextView.text = album.performers.firstOrNull()?.name ?: ""
+            genreTextView.text = album.performers.firstOrNull()?.name ?: ""
             
             Glide.with(itemView.context)
                 .load(album.cover)

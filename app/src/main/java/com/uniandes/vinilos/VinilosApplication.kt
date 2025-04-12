@@ -1,18 +1,18 @@
 package com.uniandes.vinilos
 
 import android.app.Application
-import com.uniandes.vinilos.di.networkModule
-import com.uniandes.vinilos.di.repositoryModule
-import com.uniandes.vinilos.di.viewModelModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import android.util.Log
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
 
-class VinilosApplication : Application() {
+@HiltAndroidApp
+class VinilosApplication : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidContext(this@VinilosApplication)
-            modules(listOf(networkModule, repositoryModule, viewModelModule))
-        }
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.INFO)
+            .build()
 } 
