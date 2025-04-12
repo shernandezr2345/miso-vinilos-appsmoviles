@@ -3,20 +3,24 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
-        android:title="@string/title_home" />
+        android:title="@string/title_home"
+        android:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/navigation_artists"
         android:icon="@drawable/ic_artists"
-        android:title="@string/title_artists" />
+        android:title="@string/title_artists"
+        android:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/navigation_albums"
         android:icon="@drawable/ic_albums"
-        android:title="@string/title_albums" />
+        android:title="@string/title_albums"
+        android:showAsAction="ifRoom|withText" />
 
     <item
         android:id="@+id/navigation_collectors"
         android:icon="@drawable/ic_collectors"
-        android:title="@string/title_collectors" />
+        android:title="@string/title_collectors"
+        android:showAsAction="ifRoom|withText" />
 </menu> 
