@@ -52,8 +52,10 @@
 
     <fragment
         android:id="@+id/navigation_artists"
-        android:name="com.uniandes.vinilos.ui.artists.ArtistsFragment"
-        android:label="@string/title_artists" />
+        android:name="com.uniandes.vinilos.ui.Artist.MusicianListFragment"
+        android:label="@string/title_artists">
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_collectors"

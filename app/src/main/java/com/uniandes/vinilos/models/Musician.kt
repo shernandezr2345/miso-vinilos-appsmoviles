@@ -1,0 +1,7 @@
+package com.uniandes.vinilos.models
+
+data class Musician(
+    val id: Int,
+    val name: String,
+    val image: String
+) 
