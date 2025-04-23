@@ -48,11 +48,11 @@ class MusicianListFragment : BaseFragment() {
     }
 
     private fun setupRecyclerView(view: View) {
-        adapter = MusicianAdapter { album ->
+        adapter = MusicianAdapter { musician ->
             val bundle = Bundle().apply {
-                putInt("albumId", album.id)
+                putInt("musicianId", musician.id)
             }
-            findNavController().navigate(R.id.action_albumListFragment_to_albumDetailFragment, bundle)
+            findNavController().navigate(R.id.action_navigation_artists_to_musicianDetailFragment, bundle)
         }
 
         view.findViewById<RecyclerView>(R.id.artistsRecyclerView).apply {

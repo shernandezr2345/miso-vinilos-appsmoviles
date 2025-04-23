@@ -54,7 +54,9 @@
         android:id="@+id/navigation_artists"
         android:name="com.uniandes.vinilos.ui.Artist.MusicianListFragment"
         android:label="@string/title_artists">
-
+        <action
+            android:id="@+id/action_navigation_artists_to_musicianDetailFragment"
+            app:destination="@id/musicianDetailFragment" />
     </fragment>
 
     <fragment
@@ -76,4 +78,12 @@
         android:name="com.uniandes.vinilos.ui.albums.AddAlbumFragment"
         android:label="Add Album" />
 
+    <fragment
+        android:id="@+id/musicianDetailFragment"
+        android:name="com.uniandes.vinilos.ui.Artist.MusicianDetailFragment"
+        android:label="Artist Detail">
+        <argument
+            android:name="musicianId"
+            app:argType="integer" />
+    </fragment>
 </navigation> 
