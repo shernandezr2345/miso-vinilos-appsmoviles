@@ -42,7 +42,7 @@ class AlbumDetailFragment : Fragment() {
         setupObservers(view)
         
         arguments?.getInt("albumId")?.let { albumId ->
-            viewModel.loadAlbum(albumId)
+        viewModel.loadAlbum(albumId)
         }
     }
 
