@@ -1,6 +1,7 @@
 package com.uniandes.vinilos.ui.Artist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +19,12 @@ import com.uniandes.vinilos.R
 import com.uniandes.vinilos.models.Album
 import com.uniandes.vinilos.models.Performer
 import com.uniandes.vinilos.models.Track
-import com.uniandes.vinilos.viewmodel.AlbumDetailViewModel
+import com.uniandes.vinilos.viewmodel.MusicianDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MusicianDetailFragment : Fragment() {
-    private val viewModel: AlbumDetailViewModel by viewModels()
+    private val viewModel: MusicianDetailViewModel by viewModels()
     private lateinit var tracksAdapter: TrackAdapter
     private lateinit var performersAdapter: PerformerAdapter
 
@@ -32,7 +33,7 @@ class MusicianDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_album_detail, container, false)
+        return inflater.inflate(R.layout.fragment_artist_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,8 +42,8 @@ class MusicianDetailFragment : Fragment() {
         setupRecyclerViews(view)
         setupObservers(view)
         
-        arguments?.getInt("albumId")?.let { albumId ->
-            viewModel.loadAlbum(albumId)
+        arguments?.getInt("musicianId")?.let { musicianId ->
+            viewModel.loadMusician(musicianId)
         }
     }
 
@@ -66,27 +67,30 @@ class MusicianDetailFragment : Fragment() {
         val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
         val contentView = view.findViewById<View>(R.id.contentLayout)
         val coverImageView = view.findViewById<ImageView>(R.id.albumCoverImageView)
-        val titleTextView = view.findViewById<TextView>(R.id.albumTitleTextView)
-        val artistTextView = view.findViewById<TextView>(R.id.albumArtistTextView)
-        val genreTextView = view.findViewById<TextView>(R.id.albumGenreTextView)
-        val releaseDateTextView = view.findViewById<TextView>(R.id.albumReleaseDateTextView)
-        val descriptionTextView = view.findViewById<TextView>(R.id.albumDescriptionTextView)
+        val titleTextView = view.findViewById<TextView>(R.id.artistNameTextView)
 
-        viewModel.album.observe(viewLifecycleOwner) { album ->
-            titleTextView.text = album.name
-            artistTextView.text = album.performers.firstOrNull()?.name ?: ""
-            genreTextView.text = album.genre
-            releaseDateTextView.text = album.releaseDate
-            descriptionTextView.text = album.description
+        // Verificación de que los views se encontraron
+        if (titleTextView == null) {
+            Log.e("setupObservers", "artistNameTextView es null")
+            return
+        }
 
-            Glide.with(requireContext())
-                .load(album.cover)
-                .placeholder(R.drawable.ic_album_placeholder)
-                .error(R.drawable.ic_album_placeholder)
-                .into(coverImageView)
+        if (coverImageView == null) {
+            Log.e("setupObservers", "albumCoverImageView es null")
+            return
+        }
 
-            tracksAdapter.submitList(album.tracks)
-            performersAdapter.submitList(album.performers)
+
+        viewModel.musician.observe(viewLifecycleOwner) { musician ->
+            musician?.let {
+                titleTextView.text = it.name
+
+                Glide.with(requireContext())
+                    .load(it.image)
+                    .placeholder(R.drawable.ic_album_placeholder)
+                    .error(R.drawable.ic_album_placeholder)
+                    .into(coverImageView)
+            }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
