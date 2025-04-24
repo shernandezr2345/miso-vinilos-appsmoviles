@@ -68,6 +68,8 @@ class MusicianDetailFragment : Fragment() {
         val contentView = view.findViewById<View>(R.id.contentLayout)
         val coverImageView = view.findViewById<ImageView>(R.id.albumCoverImageView)
         val titleTextView = view.findViewById<TextView>(R.id.artistNameTextView)
+        val biographyTextView = view.findViewById<TextView>(R.id.biographyTextView)
+        val bithDateTextView = view.findViewById<TextView>(R.id.birthDateTextView)
 
         // Verificación de que los views se encontraron
         if (titleTextView == null) {
@@ -83,7 +85,9 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.musician.observe(viewLifecycleOwner) { musician ->
             musician?.let {
-                titleTextView.text = it.name
+                titleTextView.text = musician.name
+                biographyTextView.text = musician.description
+                bithDateTextView.text = musician.birthDate.take(10)
 
                 Glide.with(requireContext())
                     .load(it.image)
