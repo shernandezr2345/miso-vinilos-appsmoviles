@@ -18,15 +18,17 @@ import com.bumptech.glide.Glide
 import com.uniandes.vinilos.R
 import com.uniandes.vinilos.models.Album
 import com.uniandes.vinilos.models.Performer
+import com.uniandes.vinilos.models.PerformerPrizes
 import com.uniandes.vinilos.models.Track
+import com.uniandes.vinilos.ui.album.PerformerAdapter
 import com.uniandes.vinilos.viewmodel.MusicianDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MusicianDetailFragment : Fragment() {
     private val viewModel: MusicianDetailViewModel by viewModels()
-    private lateinit var tracksAdapter: TrackAdapter
-    private lateinit var performersAdapter: PerformerAdapter
+    private lateinit var albumsAdapter: AlbumAdapter
+    private lateinit var performersPrizesAdapter: PerformerPrizesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,17 +50,18 @@ class MusicianDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerViews(view: View) {
-        tracksAdapter = TrackAdapter()
-        performersAdapter = PerformerAdapter()
+        albumsAdapter = AlbumAdapter()
+        performersPrizesAdapter = PerformerPrizesAdapter()
 
-        view.findViewById<RecyclerView>(R.id.tracksRecyclerView).apply {
+
+        view.findViewById<RecyclerView>(R.id.albumsRecyclerView).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = tracksAdapter
+            adapter = albumsAdapter
         }
 
-        view.findViewById<RecyclerView>(R.id.performersRecyclerView).apply {
+        view.findViewById<RecyclerView>(R.id.performersPrizesRecyclerView).apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = performersAdapter
+            adapter = performersPrizesAdapter
         }
     }
 
@@ -94,6 +97,9 @@ class MusicianDetailFragment : Fragment() {
                     .placeholder(R.drawable.ic_album_placeholder)
                     .error(R.drawable.ic_album_placeholder)
                     .into(coverImageView)
+
+                albumsAdapter.submitList(musician.albums)
+                performersPrizesAdapter.submitList(musician.performerPrizes)
             }
         }
 
@@ -110,68 +116,70 @@ class MusicianDetailFragment : Fragment() {
     }
 }
 
-class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
-    private var tracks: List<Track> = emptyList()
+class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
+    private var albums: List<Album> = emptyList()
 
-    fun submitList(newTracks: List<Track>) {
-        tracks = newTracks
+    fun submitList(newAlbums: List<Album>) {
+        albums = newAlbums
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_track, parent, false)
-        return TrackViewHolder(view)
+            .inflate(R.layout.item_album, parent, false)
+        return AlbumViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+    override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
+        holder.bind(albums[position])
     }
 
-    override fun getItemCount() = tracks.size
+    override fun getItemCount() = albums.size
 
-    class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.trackNameTextView)
-        private val durationTextView: TextView = itemView.findViewById(R.id.trackDurationTextView)
+    class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.albumTitle)
+        private val imageView: ImageView = itemView.findViewById(R.id.albumCover)
 
-        fun bind(track: Track) {
-            nameTextView.text = track.name
-            durationTextView.text = track.duration
+
+        fun bind(album: Album) {
+            nameTextView.text = album.name
+
+            Glide.with(itemView.context)
+                .load(album.cover)
+                .placeholder(R.drawable.ic_performer_placeholder)
+                .error(R.drawable.ic_performer_placeholder)
+                .into(imageView)
+
         }
     }
 }
 
-class PerformerAdapter : RecyclerView.Adapter<PerformerAdapter.PerformerViewHolder>() {
-    private var performers: List<Performer> = emptyList()
+class PerformerPrizesAdapter : RecyclerView.Adapter<PerformerPrizesAdapter.PerformerPrizesViewHolder>() {
+    private var performersPrizes: List<PerformerPrizes> = emptyList()
 
-    fun submitList(newPerformers: List<Performer>) {
-        performers = newPerformers
+    fun submitList(newperformersPrizes: List<PerformerPrizes>) {
+        performersPrizes = newperformersPrizes
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PerformerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PerformerPrizesViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_performer, parent, false)
-        return PerformerViewHolder(view)
+            .inflate(R.layout.item_performer_prize, parent, false)
+        return PerformerPrizesViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: PerformerViewHolder, position: Int) {
-        holder.bind(performers[position])
+    override fun onBindViewHolder(holder: PerformerPrizesViewHolder, position: Int) {
+        holder.bind(performersPrizes[position])
     }
 
-    override fun getItemCount() = performers.size
+    override fun getItemCount() = performersPrizes.size
 
-    class PerformerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.performerNameTextView)
-        private val imageView: ImageView = itemView.findViewById(R.id.performerImageView)
+    class PerformerPrizesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val premiationDateTextView: TextView = itemView.findViewById(R.id.premiationDateTextView)
 
-        fun bind(performer: Performer) {
-            nameTextView.text = performer.name
-            Glide.with(itemView.context)
-                .load(performer.image)
-                .placeholder(R.drawable.ic_performer_placeholder)
-                .error(R.drawable.ic_performer_placeholder)
-                .into(imageView)
+        fun bind(performerPrizes: PerformerPrizes) {
+            premiationDateTextView.text = performerPrizes.premiationDate.take(10)
+
         }
     }
 } 

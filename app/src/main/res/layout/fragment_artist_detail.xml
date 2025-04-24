@@ -99,7 +99,6 @@
                 tools:text="Lorem ipsum dolor sit amet, consectetur serunt mollit anim id est laborum" />
 
             <TextView
-                android:id="@+id/albumsLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -108,12 +107,12 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tracksRecyclerView"
+                android:id="@+id/albumsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 tools:itemCount="3"
-                tools:listitem="@layout/item_track" />
+                tools:listitem="@layout/item_album" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -124,12 +123,12 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/performersRecyclerView"
+                android:id="@+id/performersPrizesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 tools:itemCount="2"
-                tools:listitem="@layout/item_performer" />
+                tools:listitem="@layout/item_performer_prize" />
 
         </LinearLayout>
     </ScrollView>
