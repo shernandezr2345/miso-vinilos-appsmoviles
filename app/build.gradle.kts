@@ -71,6 +71,7 @@ dependencies {
     
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     ksp("com.github.bumptech.glide:ksp:4.16.0")
     
     // Hilt

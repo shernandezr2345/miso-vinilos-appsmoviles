@@ -2,9 +2,12 @@ package com.uniandes.vinilos.di
 
 import com.uniandes.vinilos.data.dao.ApiAlbumDao
 import com.uniandes.vinilos.data.dao.ApiAuthDaoImpl
+import com.uniandes.vinilos.data.dao.ApiMusicianDao
 import com.uniandes.vinilos.data.dao.AuthDao
+import com.uniandes.vinilos.data.dao.MusicianDao
 import com.uniandes.vinilos.network.AlbumService
 import com.uniandes.vinilos.network.AuthService
+import com.uniandes.vinilos.network.MusicianService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,4 +68,17 @@ object NetworkModule {
     fun provideAuthDao(authService: AuthService): AuthDao {
         return ApiAuthDaoImpl(authService)
     }
+
+    @Provides
+    @Singleton
+    fun provideMusicianService(retrofit: Retrofit): MusicianService {
+        return retrofit.create(MusicianService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMusicianDao(musicianService: MusicianService): MusicianDao {
+        return ApiMusicianDao(musicianService)
+    }
+
 } 
