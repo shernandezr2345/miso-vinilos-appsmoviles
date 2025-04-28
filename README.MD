@@ -1,14 +1,19 @@
-# Aplicación Vinilos
+# 🎵 Aplicación Vinilos
 
-Una aplicación móvil para gestionar y explorar discos de vinilo, construida con prácticas modernas de desarrollo Android.
+Una aplicación móvil para gestionar y explorar discos de vinilo, construida siguiendo prácticas modernas de desarrollo Android.
 
-## Arquitectura
+---
 
-La aplicación sigue el patrón de arquitectura MVVM (Model-View-ViewModel) con principios de Clean Architecture, proporcionando una clara separación de responsabilidades y haciendo el código más mantenible y testeable.
+## 🛠️ Arquitectura
 
-### Estructura y Componentes del Proyecto
+La aplicación implementa el patrón **MVVM** (Model-View-ViewModel) y principios de **Clean Architecture**, proporcionando una clara separación de responsabilidades y facilitando la mantenibilidad y el testeo.
 
-#### Capa de Datos
+---
+
+## 📦 Estructura y Componentes del Proyecto
+
+### Capa de Datos
+
 1. **Modelos**
    - Ubicados en `app/src/main/java/com/uniandes/vinilos/models/`
    - Definen las estructuras de datos utilizadas en la aplicación
@@ -127,7 +132,10 @@ object NetworkModule {
 }
 ```
 
-#### Capa de UI
+---
+
+### Capa de UI
+
 1. **Fragments**
    - Ubicados en `app/src/main/java/com/uniandes/vinilos/ui/fragments/`
    - Manejan el renderizado de UI y las interacciones del usuario
@@ -336,7 +344,7 @@ Las pruebas verifican:
    Salida: `app/build/outputs/apk/release/app-release.apk`
 
 
-## Dependencias
+## 📚 Dependencias
 
 La aplicación utiliza varias bibliotecas modernas de Android:
 
@@ -347,6 +355,8 @@ La aplicación utiliza varias bibliotecas modernas de Android:
 - **Navigation Component**: Manejo de navegación
 - **ViewBinding**: Vinculación de vistas
 - **Material Design**: Componentes de UI
+
+---
 
 ## Estructura del Proyecto
 
@@ -369,7 +379,9 @@ app/
 │   └── androidTest/            # Pruebas instrumentadas
 ```
 
-## Comenzando
+---
+
+## 🏁 Comenzando
 
 1. Clonar el repositorio
 2. Abrir el proyecto en Android Studio
