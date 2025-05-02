@@ -74,7 +74,11 @@ class AlbumDetailFragment : Fragment() {
 
         viewModel.album.observe(viewLifecycleOwner) { album ->
             titleTextView.text = album.name
-            artistTextView.text = album.performers.firstOrNull()?.name ?: ""
+            artistTextView.text = if (album.performers.isNotEmpty()) {
+                album.performers.first().name
+            } else {
+                "Unknown Artist"
+            }
             genreTextView.text = album.genre
             releaseDateTextView.text = album.releaseDate
             descriptionTextView.text = album.description
