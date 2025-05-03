@@ -1,0 +1,116 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+' ==== Capa DATA ====
+frame "Data Layer" {
+
+  rectangle "DAO" {
+    package "data.dao" {
+      class AlbumDao
+      class ApiAlbumDao
+      class ApiAuthDao
+      class ApiAuthDaoImpl
+      class AuthDao
+    }
+  }
+
+  rectangle "Repository" {
+    package "data.repository" {
+      class AlbumRepository
+      class AuthRepository
+    }
+  }
+
+  rectangle "DI" {
+    package "data.di" {
+      class DaoModule
+      class DataModule
+      class NetworkModule
+    }
+  }
+
+  rectangle "Models" {
+    package "data.models" {
+      class Album
+      class AuthResponse
+      class Comment
+      class LoginRequest
+      class Peer
+      class Performer
+      class Track
+      class UserRole
+    }
+  }
+
+  rectangle "Network" {
+    package "data.network" {
+      class AlbumService
+      class AuthService
+    }
+  }
+}
+
+' ==== Capa VIEWMODELS ====
+frame "ViewModels & App" {
+
+  rectangle "App Setup" {
+    package "viewmodel" {
+      class AlbumDetailViewModel
+      class AlbumListViewModel
+      class VinilosApplication
+    }
+  }
+
+  rectangle "UI ViewModels" {
+    package "ui.viewmodel" {
+      class AlbumViewModel
+      class LoginViewModel
+      class MainActivity
+    }
+  }
+}
+
+' ==== Capa UI ====
+frame "UI Layer" {
+
+  rectangle "Fragments" {
+    package "ui.album" {
+      class AlbumDetailFragment
+      class AlbumListFragment
+    }
+
+    package "ui.albums" {
+      class AlbumsFragment
+    }
+
+    package "ui.artists" {
+      class ArtistsFragment
+    }
+
+    package "ui.auth" {
+      class RoleSelectionFragment
+    }
+
+    package "ui.base" {
+      class BaseFragment
+    }
+
+    package "ui.collectors" {
+      class CollectorsFragment
+    }
+
+    package "ui.home" {
+      class HomeFragment
+    }
+  }
+}
+
+' ==== Utils ====
+frame "Utils" {
+  package "utils" {
+    class UserSession
+  }
+}
+
+@enduml

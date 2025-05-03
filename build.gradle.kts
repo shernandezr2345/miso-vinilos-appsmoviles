@@ -17,5 +17,6 @@ buildscript {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.7.7")
         classpath("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.22-1.0.17")
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.48")
+
     }
 }
