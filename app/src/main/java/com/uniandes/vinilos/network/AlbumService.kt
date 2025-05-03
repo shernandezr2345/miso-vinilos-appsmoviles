@@ -23,4 +23,4 @@ interface AlbumService {
 
     @DELETE("albums/{id}")
     suspend fun deleteAlbum(@Path("id") id: Int): Response<Unit>
-} 
+}

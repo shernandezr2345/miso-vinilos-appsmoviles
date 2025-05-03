@@ -5,6 +5,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -18,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.uniandes.vinilos.HiltTestRunner"
     }
 
     buildTypes {
@@ -39,6 +40,11 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
 
@@ -66,6 +72,7 @@ dependencies {
     
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     ksp("com.github.bumptech.glide:ksp:4.16.0")
     
     // Hilt
@@ -78,18 +85,29 @@ dependencies {
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
     implementation("androidx.work:work-runtime:2.9.0")
-
-    // Unit Tests
+    
+    // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.3.1")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
-
-    // Android Instrumented Tests
+    
+    // Android Testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.7")
+    androidTestImplementation("androidx.test:core-ktx:1.5.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.48")
+    androidTestImplementation("org.mockito:mockito-android:5.3.1")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    
+    // Kotlin Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 } 

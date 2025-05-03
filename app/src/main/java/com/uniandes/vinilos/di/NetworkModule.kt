@@ -2,9 +2,14 @@ package com.uniandes.vinilos.di
 
 import com.uniandes.vinilos.data.dao.ApiAlbumDao
 import com.uniandes.vinilos.data.dao.ApiAuthDaoImpl
+import com.uniandes.vinilos.data.dao.ApiMusicianDao
 import com.uniandes.vinilos.data.dao.AuthDao
+import com.uniandes.vinilos.data.dao.CollectorDao
+import com.uniandes.vinilos.data.dao.MusicianDao
 import com.uniandes.vinilos.network.AlbumService
 import com.uniandes.vinilos.network.AuthService
+import com.uniandes.vinilos.network.MusicianService
+import com.uniandes.vinilos.repositories.CollectorRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +24,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://146.190.65.12:3000/"
+    // private const val BASE_URL = "http://146.190.65.12:3000/"
+ private const val BASE_URL = "http://10.0.2.2:3000"
 
     @Provides
     @Singleton
@@ -65,4 +71,29 @@ object NetworkModule {
     fun provideAuthDao(authService: AuthService): AuthDao {
         return ApiAuthDaoImpl(authService)
     }
+
+    @Provides
+    @Singleton
+    fun provideMusicianService(retrofit: Retrofit): MusicianService {
+        return retrofit.create(MusicianService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMusicianDao(musicianService: MusicianService): MusicianDao {
+        return ApiMusicianDao(musicianService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCollectorDao(retrofit: Retrofit): CollectorDao {
+        return retrofit.create(CollectorDao::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCollectorRepository(collectorDao: CollectorDao): CollectorRepository {
+        return CollectorRepository(collectorDao)
+    }
+
 } 
