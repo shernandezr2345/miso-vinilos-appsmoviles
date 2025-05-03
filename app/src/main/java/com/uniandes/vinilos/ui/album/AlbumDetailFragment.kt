@@ -145,7 +145,9 @@ class TrackAdapter : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
         fun bind(track: Track) {
             nameTextView.text = track.name
-            durationTextView.text = track.duration
+            val minutes = track.duration / 60
+            val seconds = track.duration % 60
+            durationTextView.text = String.format("%d:%02d", minutes, seconds)
         }
     }
 }
