@@ -27,8 +27,8 @@ class MusicianDetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val musicianIdDetail = repository.getMusicianById(MusicianId)
-                _musician.value = musicianIdDetail
+                _musician.postValue(repository.getMusicianById(MusicianId))
+
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error loading musician details"
             } finally {
