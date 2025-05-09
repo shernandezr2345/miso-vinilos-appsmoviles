@@ -20,6 +20,8 @@ import com.uniandes.vinilos.models.Performer
 import com.uniandes.vinilos.models.Track
 import com.uniandes.vinilos.viewmodel.AlbumDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @AndroidEntryPoint
 class AlbumDetailFragment : Fragment() {
@@ -79,8 +81,17 @@ class AlbumDetailFragment : Fragment() {
             } else {
                 "Unknown Artist"
             }
+            val formattedDate = try {
+                val parser = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val date = parser.parse(album.releaseDate)
+                formatter.format(date)
+            } catch (e: Exception) {
+                album.releaseDate
+            }
+
             genreTextView.text = album.genre
-            releaseDateTextView.text = album.releaseDate
+            releaseDateTextView.text = formattedDate
             descriptionTextView.text = album.description
 
             Glide.with(requireContext())
