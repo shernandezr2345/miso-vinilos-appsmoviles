@@ -101,6 +101,8 @@ class AlbumDetailFragment : Fragment() {
                 .into(coverImageView)
 
             tracksAdapter.submitList(album.tracks)
+            val tracksRecyclerView = view.findViewById<RecyclerView>(R.id.tracksRecyclerView)
+            tracksRecyclerView.isVisible = !album.tracks.isNullOrEmpty()
             performersAdapter.submitList(album.performers)
         }
 
