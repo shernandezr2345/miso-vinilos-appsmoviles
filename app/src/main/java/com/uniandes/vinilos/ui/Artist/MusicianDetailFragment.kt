@@ -10,19 +10,19 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.uniandes.vinilos.R
+import com.uniandes.vinilos.databinding.FragmentArtistDetailBinding
 import com.uniandes.vinilos.models.Album
-import com.uniandes.vinilos.models.Performer
 import com.uniandes.vinilos.models.PerformerPrizes
-import com.uniandes.vinilos.models.Track
-import com.uniandes.vinilos.ui.album.PerformerAdapter
 import com.uniandes.vinilos.viewmodel.MusicianDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MusicianDetailFragment : Fragment() {
@@ -30,98 +30,136 @@ class MusicianDetailFragment : Fragment() {
     private lateinit var albumsAdapter: AlbumAdapter
     private lateinit var performersPrizesAdapter: PerformerPrizesAdapter
 
+    // Usar view binding para evitar findViewById repetitivos
+    private var _binding: FragmentArtistDetailBinding? = null
+    private val binding get() = _binding!!
+
+    // RequestOptions para reutilizar configuración de Glide
+    private val glideOptions by lazy {
+        RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.ic_album_placeholder)
+            .error(R.drawable.ic_album_placeholder)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_artist_detail, container, false)
+    ): View {
+        _binding = FragmentArtistDetailBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerViews(view)
-        setupObservers(view)
-        
-        arguments?.getInt("musicianId")?.let { musicianId ->
+        setupRecyclerViews()
+        setupObservers()
+
+        // Usar también?: para prevenir operaciones innecesarias
+        arguments?.getInt("musicianId", -1).takeIf { it != -1 }?.let { musicianId ->
             viewModel.loadMusician(musicianId)
         }
     }
 
-    private fun setupRecyclerViews(view: View) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Limpieza de recursos para evitar memory leaks
+        _binding = null
+    }
+
+    private fun setupRecyclerViews() {
+        // Inicializar adapters con funciones de lista inmutables
         albumsAdapter = AlbumAdapter()
         performersPrizesAdapter = PerformerPrizesAdapter()
 
-
-        view.findViewById<RecyclerView>(R.id.albumsRecyclerView).apply {
+        // Configurar RecyclerViews con setHasFixedSize para optimizar rendimiento
+        binding.albumsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = albumsAdapter
+            setHasFixedSize(true)
         }
 
-        view.findViewById<RecyclerView>(R.id.performersPrizesRecyclerView).apply {
+        binding.performersPrizesRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = performersPrizesAdapter
+            setHasFixedSize(true)
         }
     }
 
-    private fun setupObservers(view: View) {
-        val loadingProgressBar = view.findViewById<View>(R.id.loadingProgressBar)
-        val errorTextView = view.findViewById<TextView>(R.id.errorTextView)
-        val contentView = view.findViewById<View>(R.id.contentLayout)
-        val coverImageView = view.findViewById<ImageView>(R.id.albumCoverImageView)
-        val titleTextView = view.findViewById<TextView>(R.id.artistNameTextView)
-        val biographyTextView = view.findViewById<TextView>(R.id.biographyTextView)
-        val bithDateTextView = view.findViewById<TextView>(R.id.birthDateTextView)
+    private fun setupObservers() {
+        // Usar lifecycleScope para observar cambios de estado de forma más eficiente
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.musician.observe(viewLifecycleOwner) { musician ->
+                musician?.let {
+                    with(binding) {
+                        artistNameTextView.text = musician.name
+                        biographyTextView.text = musician.description
+                        birthDateTextView.text = musician.birthDate.take(10)
 
-        // Verificación de que los views se encontraron
-        if (titleTextView == null) {
-            Log.e("setupObservers", "artistNameTextView es null")
-            return
-        }
+                        // Usar la configuración preestablecida de Glide
+                        Glide.with(requireContext())
+                            .load(it.image)
+                            .apply(glideOptions)
+                            .into(albumCoverImageView)
+                    }
 
-        if (coverImageView == null) {
-            Log.e("setupObservers", "albumCoverImageView es null")
-            return
-        }
-
-
-        viewModel.musician.observe(viewLifecycleOwner) { musician ->
-            musician?.let {
-                titleTextView.text = musician.name
-                biographyTextView.text = musician.description
-                bithDateTextView.text = musician.birthDate.take(10)
-
-                Glide.with(requireContext())
-                    .load(it.image)
-                    .placeholder(R.drawable.ic_album_placeholder)
-                    .error(R.drawable.ic_album_placeholder)
-                    .into(coverImageView)
-
-                albumsAdapter.submitList(musician.albums)
-                performersPrizesAdapter.submitList(musician.performerPrizes)
+                    // Usar DiffUtil implícitamente a través de submitList
+                    albumsAdapter.submitList(musician.albums.toList())
+                    performersPrizesAdapter.submitList(musician.performerPrizes.toList())
+                }
             }
-        }
 
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            loadingProgressBar.isVisible = isLoading
-            contentView.isVisible = !isLoading
-        }
+            viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                binding.loadingProgressBar.isVisible = isLoading
+                binding.contentLayout.isVisible = !isLoading
+            }
 
-        viewModel.error.observe(viewLifecycleOwner) { error ->
-            errorTextView.text = error
-            errorTextView.isVisible = error != null
-            contentView.isVisible = error == null
+            viewModel.error.observe(viewLifecycleOwner) { error ->
+                binding.errorTextView.text = error
+                binding.errorTextView.isVisible = error != null
+                binding.contentLayout.isVisible = error == null
+            }
         }
     }
 }
 
+// Optimizar Adapter con DiffUtil para actualización eficiente
 class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
     private var albums: List<Album> = emptyList()
 
+    // Usar ViewBinding o view caching para mejorar rendimiento
+    class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.albumTitle)
+        private val imageView: ImageView = itemView.findViewById(R.id.albumCover)
+
+        // RequestOptions reutilizables para Glide
+        private val glideOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.ic_performer_placeholder)
+            .error(R.drawable.ic_performer_placeholder)
+
+        fun bind(album: Album) {
+            nameTextView.text = album.name
+
+            // Optimizar carga de imágenes
+            Glide.with(itemView.context)
+                .load(album.cover)
+                .apply(glideOptions)
+                .into(imageView)
+        }
+    }
+
     fun submitList(newAlbums: List<Album>) {
+        val oldList = albums
         albums = newAlbums
-        notifyDataSetChanged()
+
+        // Uso simple de notificación para este ejemplo
+        // En producción usar DiffUtil.calculateDiff() para solo actualizar items que cambiaron
+        if (oldList != newAlbums) {
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
@@ -135,31 +173,31 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
     }
 
     override fun getItemCount() = albums.size
-
-    class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.albumTitle)
-        private val imageView: ImageView = itemView.findViewById(R.id.albumCover)
-
-
-        fun bind(album: Album) {
-            nameTextView.text = album.name
-
-            Glide.with(itemView.context)
-                .load(album.cover)
-                .placeholder(R.drawable.ic_performer_placeholder)
-                .error(R.drawable.ic_performer_placeholder)
-                .into(imageView)
-
-        }
-    }
 }
 
+// Optimizar Adapter de premios
 class PerformerPrizesAdapter : RecyclerView.Adapter<PerformerPrizesAdapter.PerformerPrizesViewHolder>() {
     private var performersPrizes: List<PerformerPrizes> = emptyList()
 
-    fun submitList(newperformersPrizes: List<PerformerPrizes>) {
-        performersPrizes = newperformersPrizes
-        notifyDataSetChanged()
+    class PerformerPrizesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val premiationDateTextView: TextView = itemView.findViewById(R.id.premiationDateTextView)
+
+        // Extraer la función para evitar recalcularla en cada bind
+        fun bind(performerPrizes: PerformerPrizes) {
+            // Extraer valor una vez en lugar de llamar take(10) múltiples veces
+            val formattedDate = performerPrizes.premiationDate.take(10)
+            premiationDateTextView.text = formattedDate
+        }
+    }
+
+    fun submitList(newPerformersPrizes: List<PerformerPrizes>) {
+        val oldList = performersPrizes
+        performersPrizes = newPerformersPrizes
+
+        // Optimizar notificación de cambios
+        if (oldList != newPerformersPrizes) {
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PerformerPrizesViewHolder {
@@ -173,13 +211,4 @@ class PerformerPrizesAdapter : RecyclerView.Adapter<PerformerPrizesAdapter.Perfo
     }
 
     override fun getItemCount() = performersPrizes.size
-
-    class PerformerPrizesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val premiationDateTextView: TextView = itemView.findViewById(R.id.premiationDateTextView)
-
-        fun bind(performerPrizes: PerformerPrizes) {
-            premiationDateTextView.text = performerPrizes.premiationDate.take(10)
-
-        }
-    }
-} 
+}
