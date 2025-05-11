@@ -5,21 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/navigation_role_selection">
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.uniandes.vinilos.ui.fragments.LoginFragment"
-        android:label="Login">
-        <action
-            android:id="@+id/action_login_to_main"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.uniandes.vinilos.ui.fragments.MainFragment"
-        android:label="Main" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -45,9 +30,6 @@
         <action
             android:id="@+id/action_albumListFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
-        <action
-            android:id="@+id/action_albums_to_addAlbum"
-            app:destination="@id/navigation_add_album" />
     </fragment>
 
     <fragment
@@ -73,10 +55,6 @@
             app:argType="integer" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_add_album"
-        android:name="com.uniandes.vinilos.ui.albums.AddAlbumFragment"
-        android:label="Add Album" />
 
     <fragment
         android:id="@+id/musicianDetailFragment"
