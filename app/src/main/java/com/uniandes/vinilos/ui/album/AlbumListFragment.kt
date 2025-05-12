@@ -76,9 +76,7 @@ class AlbumListFragment : BaseFragment() {
         view.findViewById<View>(R.id.addAlbumFab)?.also { fab ->
             if (userSession.isCollector()) {
                 fab.visibility = View.VISIBLE
-                fab.setOnClickListener {
-                    findNavController().navigate(R.id.action_albums_to_addAlbum)
-                }
+
             } else {
                 fab.visibility = View.GONE
             }

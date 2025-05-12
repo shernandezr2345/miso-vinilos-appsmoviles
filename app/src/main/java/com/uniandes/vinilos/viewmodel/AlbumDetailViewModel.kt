@@ -27,8 +27,7 @@ class AlbumDetailViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val albumDetail = repository.getAlbumById(albumId)
-                _album.value = albumDetail
+                _album.postValue(repository.getAlbumById(albumId))
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error loading album details"
             } finally {
