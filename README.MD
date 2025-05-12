@@ -380,10 +380,3 @@ app/
 ```
 
 ---
-
-## 🏁 Comenzando
-
-1. Clonar el repositorio
-2. Abrir el proyecto en Android Studio
-3. Sincronizar el proyecto con los archivos Gradle
-4. Ejecutar la aplicación en un emulador o dispositivo físico

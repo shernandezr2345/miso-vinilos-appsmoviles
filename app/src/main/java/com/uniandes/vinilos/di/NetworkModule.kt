@@ -1,13 +1,10 @@
 package com.uniandes.vinilos.di
 
 import com.uniandes.vinilos.data.dao.ApiAlbumDao
-import com.uniandes.vinilos.data.dao.ApiAuthDaoImpl
 import com.uniandes.vinilos.data.dao.ApiMusicianDao
-import com.uniandes.vinilos.data.dao.AuthDao
 import com.uniandes.vinilos.data.dao.CollectorDao
 import com.uniandes.vinilos.data.dao.MusicianDao
 import com.uniandes.vinilos.network.AlbumService
-import com.uniandes.vinilos.network.AuthService
 import com.uniandes.vinilos.network.MusicianService
 import com.uniandes.vinilos.repositories.CollectorRepository
 import dagger.Module
@@ -25,7 +22,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     // private const val BASE_URL = "http://146.190.65.12:3000/"
- private const val BASE_URL = "http://10.0.2.2:3000"
+private const val BASE_URL = "http://146.190.65.12:3000/"
 
     @Provides
     @Singleton
@@ -58,18 +55,6 @@ object NetworkModule {
     @Singleton
     fun provideApiAlbumDao(albumService: AlbumService): ApiAlbumDao {
         return ApiAlbumDao(albumService)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthService(retrofit: Retrofit): AuthService {
-        return retrofit.create(AuthService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAuthDao(authService: AuthService): AuthDao {
-        return ApiAuthDaoImpl(authService)
     }
 
     @Provides

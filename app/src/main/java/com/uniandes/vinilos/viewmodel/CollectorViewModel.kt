@@ -8,6 +8,8 @@ import com.uniandes.vinilos.models.Collector
 import com.uniandes.vinilos.models.CollectorAlbum
 import com.uniandes.vinilos.repositories.CollectorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,6 +64,22 @@ class CollectorViewModel @Inject constructor(
                     albumsMap[collector.id] = emptyList()
                 }
             }
+            _collectorAlbums.value = albumsMap
+        }
+
+        viewModelScope.launch {
+            val albumsMap = collectors.map { collector ->
+                async {
+                    val albums = try {
+                        val response = repository.getCollectorAlbums(collector.id)
+                        if (response.isSuccessful) response.body() ?: emptyList()
+                        else emptyList()
+                    } catch (e: Exception) {
+                        emptyList()
+                    }
+                    collector.id to albums
+                }
+            }.awaitAll().toMap()
             _collectorAlbums.value = albumsMap
         }
     }

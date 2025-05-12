@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="16dp" />
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
