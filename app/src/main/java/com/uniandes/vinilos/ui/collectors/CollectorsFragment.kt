@@ -1,11 +1,13 @@
 package com.uniandes.vinilos.ui.collectors
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
-import androidx.appcompat.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CollectorsFragment : Fragment() {
     private val viewModel: CollectorViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var searchView: SearchView
+    private lateinit var searchEditText: EditText
     private var albumsMap: Map<Int, List<CollectorAlbum>> = emptyMap()
 
     override fun onCreateView(
@@ -41,7 +43,7 @@ class CollectorsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.collectors_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        searchView = view.findViewById(R.id.search_view)
+        searchEditText = view.findViewById(R.id.searchEditText)
         setupSearchView()
 
         viewModel.collectorAlbums.observe(viewLifecycleOwner) { map ->
@@ -67,14 +69,11 @@ class CollectorsFragment : Fragment() {
     }
 
     private fun setupSearchView() {
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                (recyclerView.adapter as? CollectorAdapter)?.filter(newText.orEmpty())
-                return true
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                (recyclerView.adapter as? CollectorAdapter)?.filter(s?.toString() ?: "")
             }
         })
     }
