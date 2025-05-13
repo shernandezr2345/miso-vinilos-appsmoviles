@@ -2,6 +2,7 @@ package com.uniandes.vinilos.data.dao
 
 import com.uniandes.vinilos.models.Album
 import com.uniandes.vinilos.models.Track
+import com.uniandes.vinilos.models.CreateAlbumRequest
 import com.uniandes.vinilos.network.AlbumService
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Response
@@ -51,7 +52,7 @@ class ApiAlbumDao @Inject constructor(
         }
     }
 
-    suspend fun createAlbum(album: Album): Album? {
+    suspend fun createAlbum(album: CreateAlbumRequest): Album? {
         return albumService.createAlbum(album).body()
     }
 

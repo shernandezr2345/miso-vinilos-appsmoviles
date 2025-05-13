@@ -223,7 +223,6 @@ class CollectorAlbumAdapter(private val collectorAlbums: List<CollectorAlbum>) :
         private val coverImageView: ImageView = itemView.findViewById(R.id.album_cover)
 
         fun bind(collectorAlbum: CollectorAlbum) {
-            println("collectorAlbum: $collectorAlbum")
             // Handle null album case
             if (collectorAlbum.album == null) {
                 nameTextView.text = "Unknown Album"

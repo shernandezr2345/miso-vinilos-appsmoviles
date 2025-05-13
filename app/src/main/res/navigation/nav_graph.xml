@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_albumListFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_albumListFragment_to_addAlbumFragment"
+            app:destination="@id/addAlbumFragment" />
     </fragment>
 
     <fragment
@@ -64,4 +67,11 @@
             android:name="musicianId"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addAlbumFragment"
+        android:name="com.uniandes.vinilos.ui.album.AddAlbumFragment"
+        android:label="Add Album"
+        tools:layout="@layout/fragment_add_album" />
+
 </navigation> 

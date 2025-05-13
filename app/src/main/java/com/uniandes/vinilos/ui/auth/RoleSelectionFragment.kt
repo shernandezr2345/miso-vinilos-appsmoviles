@@ -38,13 +38,12 @@ class RoleSelectionFragment : BaseFragment() {
         continueButton.setOnClickListener {
             val selectedId = radioGroup.checkedRadioButtonId
             if (selectedId != -1) {
-                val radioButton = view.findViewById<RadioButton>(selectedId)
-                val selectedRole = UserRole.fromString(radioButton.text.toString())
-                
-                // Save the selected role
+                val selectedRole = when (selectedId) {
+                    R.id.collectorRole -> UserRole.COLLECTOR
+                    R.id.visitorRole -> UserRole.VISITOR
+                    else -> UserRole.VISITOR // default/fallback
+                }
                 userSession.userRole = selectedRole
-                
-                // Navigate to main screen
                 findNavController().navigate(R.id.action_roleSelection_to_albums)
             }
         }
