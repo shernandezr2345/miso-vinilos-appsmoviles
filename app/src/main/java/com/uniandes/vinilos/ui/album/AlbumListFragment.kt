@@ -73,12 +73,16 @@ class AlbumListFragment : BaseFragment() {
     }
 
     private fun setupFab(view: View) {
-        view.findViewById<View>(R.id.addAlbumFab)?.also { fab ->
+        view.findViewById<View>(R.id.addAlbumButton)?.also { button ->
+            println("userSession.isCollector(): ${userSession.isCollector()}")
+            println("userSession.isMusician(): ${userSession.userRole}")
             if (userSession.isCollector()) {
-                fab.visibility = View.VISIBLE
-
+                button.visibility = View.VISIBLE
+                button.setOnClickListener {
+                    findNavController().navigate(R.id.action_albumListFragment_to_addAlbumFragment)
+                }
             } else {
-                fab.visibility = View.GONE
+                button.visibility = View.GONE
             }
         }
     }
