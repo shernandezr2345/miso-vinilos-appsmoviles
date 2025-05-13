@@ -16,7 +16,17 @@
             android:text="Agregar Nuevo Álbum"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:contentDescription="Título de la sección agregar álbum"
             android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre del Álbum"
+            android:labelFor="@id/nameEditText"
+            android:contentDescription="Campo para ingresar el nombre del álbum"
+            android:layout_marginBottom="4dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -31,6 +41,15 @@
                 android:hint="Nombre del Álbum"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/coverLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL de la Portada"
+            android:labelFor="@id/coverEditText"
+            android:contentDescription="Campo para ingresar la URL de la portada del álbum"
+            android:layout_marginBottom="4dp"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +63,15 @@
                 android:hint="URL de la Portada"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/releaseDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fecha de Lanzamiento"
+            android:labelFor="@id/releaseDateEditText"
+            android:contentDescription="Campo para ingresar la fecha de lanzamiento del álbum"
+            android:layout_marginBottom="4dp"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +84,15 @@
                 android:layout_height="wrap_content"
                 android:hint="Fecha de Lanzamiento (YYYY-MM-DD)"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/descriptionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:labelFor="@id/descriptionEditText"
+            android:contentDescription="Campo para ingresar la descripción del álbum"
+            android:layout_marginBottom="4dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -74,9 +111,12 @@
 
         <!-- Genre Spinner -->
         <TextView
+            android:id="@+id/genreLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Género"
+            android:labelFor="@id/genreSpinner"
+            android:contentDescription="Selector de género del álbum"
             android:layout_marginBottom="4dp"/>
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/genreSpinner"
@@ -86,9 +126,12 @@
 
         <!-- Record Label Spinner -->
         <TextView
+            android:id="@+id/recordLabelLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Discográfica"
+            android:labelFor="@id/recordLabelSpinner"
+            android:contentDescription="Selector de discográfica del álbum"
             android:layout_marginBottom="4dp"/>
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/recordLabelSpinner"
@@ -101,6 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Guardar Álbum"
+            android:contentDescription="Botón para guardar el álbum"
             android:padding="12dp"/>
 
     </LinearLayout>

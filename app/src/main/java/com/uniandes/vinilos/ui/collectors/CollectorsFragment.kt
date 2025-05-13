@@ -52,16 +52,16 @@ class CollectorsFragment : Fragment() {
         }
 
         viewModel.collectors.observe(viewLifecycleOwner) { collectors ->
-            recyclerView.adapter = CollectorAdapter(collectors, albumsMap) { collector ->
+            recyclerView.adapter = CollectorAdapter(collectors, albumsMap) { _ ->
                 // Handle collector click if needed
             }
         }
 
-        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.loading.observe(viewLifecycleOwner) { _ ->
             // Handle loading state
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { error ->
+        viewModel.error.observe(viewLifecycleOwner) { _ ->
             // Handle error state
         }
 

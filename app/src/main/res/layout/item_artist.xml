@@ -17,7 +17,8 @@
             android:id="@+id/musicianImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:contentDescription="@string/musician_image"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,6 +32,7 @@
             android:text="Nombre del Artista"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:contentDescription="Nombre del artista"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/musicianImage"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +45,7 @@
             android:layout_marginStart="16dp"
             android:text="Detalle del Artista"
             android:textSize="14sp"
+            android:contentDescription="Detalles del artista"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/musicianImage"
             app:layout_constraintTop_toBottomOf="@id/musicianName" />
@@ -64,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"/>
+                android:padding="8dp"
+                android:contentDescription="Editar artista"/>
 
             <ImageButton
                 android:id="@+id/deleteButton"
@@ -72,7 +76,8 @@
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_delete"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"/>
+                android:padding="8dp"
+                android:contentDescription="Eliminar artista"/>
 
         </LinearLayout>
 

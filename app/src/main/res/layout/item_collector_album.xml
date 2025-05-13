@@ -10,6 +10,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:src="@drawable/ic_album_placeholder" />
 
     <LinearLayout
@@ -23,42 +25,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:contentDescription="Nombre del álbum" />
 
         <TextView
             android:id="@+id/album_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Precio del álbum" />
 
         <TextView
             android:id="@+id/album_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Estado del álbum" />
 
         <TextView
             android:id="@+id/album_genre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Género del álbum" />
 
         <TextView
             android:id="@+id/album_record_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Sello discográfico" />
 
         <TextView
             android:id="@+id/album_release_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Fecha de lanzamiento" />
 
         <TextView
             android:id="@+id/album_description"
@@ -67,7 +75,8 @@
             android:layout_marginTop="4dp"
             android:maxLines="3"
             android:ellipsize="end"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="Descripción del álbum" />
 
     </LinearLayout>
 

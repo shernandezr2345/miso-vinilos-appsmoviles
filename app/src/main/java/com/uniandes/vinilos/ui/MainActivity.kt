@@ -1,32 +1,31 @@
 package com.uniandes.vinilos.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.uniandes.vinilos.R
-import androidx.appcompat.widget.Toolbar
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.ui.setupWithNavController
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var navView: BottomNavigationView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        val fragmentManager = supportFragmentManager
+        var navHostFragment = fragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        if (navHostFragment == null) {
+            navHostFragment = NavHostFragment.create(R.navigation.nav_graph)
+            fragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment, navHostFragment)
+                .setPrimaryNavigationFragment(navHostFragment)
+                .commitNow()
+        }
 
-        navView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        
+        val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_role_selection,
@@ -35,27 +34,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_collectors
             )
         )
-
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        val navView = findViewById<BottomNavigationView>(R.id.nav_view)
         navView.setupWithNavController(navController)
-
-        // Hide bottom navigation on role selection screen
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.navigation_role_selection -> {
-                    navView.visibility = View.GONE
-                    supportActionBar?.hide()
-                }
-                else -> {
-                    navView.visibility = View.VISIBLE
-                    supportActionBar?.show()
-                }
-            }
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

@@ -129,7 +129,7 @@ class MusicianAdapter(
 
         fun bind(musician: Musician) {
             musicianName.text = musician.name
-            musicianDetail.text = musician.name ?: ""
+            musicianDetail.text = musician.name ?: "Unknown Artist"
 
             Glide.with(itemView.context)
                 .load(musician.image)

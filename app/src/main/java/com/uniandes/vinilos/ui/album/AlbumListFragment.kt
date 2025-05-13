@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ImageButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -74,8 +76,6 @@ class AlbumListFragment : BaseFragment() {
 
     private fun setupFab(view: View) {
         view.findViewById<View>(R.id.addAlbumButton)?.also { button ->
-            println("userSession.isCollector(): ${userSession.isCollector()}")
-            println("userSession.isMusician(): ${userSession.userRole}")
             if (userSession.isCollector()) {
                 button.visibility = View.VISIBLE
                 button.setOnClickListener {
@@ -120,28 +120,58 @@ class AlbumAdapter(
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val album = getItem(position)
+        holder.bind(album)
     }
 
-    class AlbumViewHolder(
-        view: View,
+    inner class AlbumViewHolder(
+        itemView: View,
         private val onAlbumClick: (Album) -> Unit
-    ) : RecyclerView.ViewHolder(view) {
-        private val coverImageView: ImageView = view.findViewById(R.id.albumCover)
-        private val titleTextView: TextView = view.findViewById(R.id.albumTitle)
-        private val genreTextView: TextView = view.findViewById(R.id.albumGenre)
+    ) : RecyclerView.ViewHolder(itemView) {
+        private val albumCoverImageView: ImageView = itemView.findViewById(R.id.albumCoverImageView)
+        private val albumNameTextView: TextView = itemView.findViewById(R.id.albumNameTextView)
+        private val albumArtistTextView: TextView = itemView.findViewById(R.id.albumArtistTextView)
+        private val albumGenreTextView: TextView = itemView.findViewById(R.id.albumGenreTextView)
+        private val editOptionsGroup: LinearLayout = itemView.findViewById(R.id.editOptionsGroup)
+        private val editButton: ImageButton = itemView.findViewById(R.id.editButton)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
 
         fun bind(album: Album) {
-            titleTextView.text = album.name
-            genreTextView.text = album.performers.firstOrNull()?.name ?: ""
+            albumNameTextView.text = album.name
+            val artistName = album.performers.firstOrNull()?.name ?: "Artista desconocido"
+            albumArtistTextView.text = artistName
+            albumGenreTextView.text = album.genre
             
-            Glide.with(itemView.context)
+            // Load album cover image
+            Glide.with(albumCoverImageView.context)
                 .load(album.cover)
-                .placeholder(R.drawable.ic_album_placeholder)
-                .error(R.drawable.ic_album_placeholder)
-                .into(coverImageView)
+                .placeholder(R.drawable.album_placeholder)
+                .error(R.drawable.album_placeholder)
+                .into(albumCoverImageView)
 
-            itemView.setOnClickListener { onAlbumClick(album) }
+            // Set content descriptions for accessibility
+            albumCoverImageView.contentDescription = "Portada del álbum ${album.name}"
+            albumNameTextView.contentDescription = "Nombre del álbum: ${album.name}"
+            albumArtistTextView.contentDescription = "Artista: $artistName"
+            albumGenreTextView.contentDescription = "Género: ${album.genre}"
+            editButton.contentDescription = "Editar álbum ${album.name}"
+            deleteButton.contentDescription = "Eliminar álbum ${album.name}"
+
+            // Show edit options only for collectors
+            editOptionsGroup.visibility = View.GONE // We'll handle this in the fragment
+
+            // Set click listeners
+            itemView.setOnClickListener {
+                onAlbumClick(album)
+            }
+
+            editButton.setOnClickListener {
+                // Implement edit logic
+            }
+
+            deleteButton.setOnClickListener {
+                // Implement delete logic
+            }
         }
     }
 }
