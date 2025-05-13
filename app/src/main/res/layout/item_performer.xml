@@ -11,6 +11,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         tools:src="@tools:sample/avatars" />
 
     <TextView
@@ -21,6 +23,7 @@
         android:layout_marginStart="16dp"
         android:layout_weight="1"
         android:textSize="16sp"
+        android:contentDescription="Nombre del intérprete"
         tools:text="Performer Name" />
 
 </LinearLayout> 

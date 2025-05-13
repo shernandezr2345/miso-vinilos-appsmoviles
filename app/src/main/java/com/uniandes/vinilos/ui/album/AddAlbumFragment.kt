@@ -98,7 +98,7 @@ class AddAlbumFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.isLoading.observe(viewLifecycleOwner) { _ ->
             // TODO: Show loading indicator
         }
 

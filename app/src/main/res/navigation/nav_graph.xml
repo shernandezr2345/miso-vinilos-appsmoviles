@@ -62,10 +62,13 @@
     <fragment
         android:id="@+id/musicianDetailFragment"
         android:name="com.uniandes.vinilos.ui.Artist.MusicianDetailFragment"
-        android:label="Artist Detail">
+        android:label="Musician Detail">
         <argument
             android:name="musicianId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_musicianDetailFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
     </fragment>
 
     <fragment

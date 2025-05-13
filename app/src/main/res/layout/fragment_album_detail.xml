@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:contentDescription="Cargando"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +23,7 @@
         android:layout_margin="16dp"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="gone"
+        android:contentDescription="Mensaje de error"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <TextView
@@ -53,6 +57,7 @@
                 android:layout_marginTop="16dp"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:contentDescription="Título del álbum"
                 tools:text="Album Title" />
 
             <TextView
@@ -61,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="18sp"
+                android:contentDescription="Artista del álbum"
                 tools:text="Artist Name" />
 
             <TextView
@@ -69,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="16sp"
+                android:contentDescription="Género del álbum"
                 tools:text="Genre" />
 
             <TextView
@@ -77,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="16sp"
+                android:contentDescription="Fecha de lanzamiento"
                 tools:text="Release Date" />
 
             <TextView
@@ -85,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textSize="16sp"
+                android:contentDescription="Descripción del álbum"
                 tools:text="Album description goes here..." />
 
             <TextView
@@ -93,13 +102,15 @@
                 android:layout_marginTop="16dp"
                 android:text="Tracks"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Lista de canciones" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tracksRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="Lista de canciones del álbum"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_track" />
 
@@ -109,13 +120,15 @@
                 android:layout_marginTop="16dp"
                 android:text="Performers"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Lista de intérpretes" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/performersRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="Lista de intérpretes del álbum"
                 tools:itemCount="2"
                 tools:listitem="@layout/item_performer" />
 
