@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uniandes.vinilos.data.dao.ApiAlbumDao
 import com.uniandes.vinilos.models.Album
+import com.uniandes.vinilos.models.CreateAlbumRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,17 +38,13 @@ class AddAlbumViewModel @Inject constructor(
                 _isLoading.value = true
                 _error.value = null
 
-                val album = Album(
-                    id = 0, // The server will assign the ID
+                val album = CreateAlbumRequest(
                     name = name,
                     cover = cover,
                     releaseDate = releaseDate,
                     description = description,
                     genre = genre,
-                    recordLabel = recordLabel,
-                    performers = emptyList(), // Will be handled by the server
-                    tracks = emptyList(), // Will be handled by the server
-                    comments = emptyList() // Will be handled by the server
+                    recordLabel = recordLabel
                 )
 
                 albumDao.createAlbum(album)
