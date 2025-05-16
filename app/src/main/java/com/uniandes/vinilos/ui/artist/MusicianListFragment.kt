@@ -1,4 +1,4 @@
-package com.uniandes.vinilos.ui.Artist
+package com.uniandes.vinilos.ui.artist
 
 import android.os.Bundle
 import android.text.Editable
@@ -75,7 +75,9 @@ class MusicianListFragment : BaseFragment() {
         view.findViewById<View>(R.id.addArtistFab)?.also { fab ->
             if (userSession.isCollector()) {
                 fab.visibility = View.VISIBLE
-
+                fab.setOnClickListener {
+                    findNavController().navigate(R.id.action_artistsListFragment_to_addAlbumFragment)
+                }
             } else {
                 fab.visibility = View.GONE
             }

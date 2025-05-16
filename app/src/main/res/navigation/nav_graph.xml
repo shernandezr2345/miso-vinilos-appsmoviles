@@ -37,11 +37,14 @@
 
     <fragment
         android:id="@+id/navigation_artists"
-        android:name="com.uniandes.vinilos.ui.Artist.MusicianListFragment"
+        android:name="com.uniandes.vinilos.ui.artist.MusicianListFragment"
         android:label="@string/title_artists">
         <action
             android:id="@+id/action_navigation_artists_to_musicianDetailFragment"
             app:destination="@id/musicianDetailFragment" />
+        <action
+            android:id="@+id/action_artistsListFragment_to_addAlbumFragment"
+            app:destination="@id/AddArtistFragment" />
     </fragment>
 
     <fragment
@@ -61,7 +64,7 @@
 
     <fragment
         android:id="@+id/musicianDetailFragment"
-        android:name="com.uniandes.vinilos.ui.Artist.MusicianDetailFragment"
+        android:name="com.uniandes.vinilos.ui.artist.MusicianDetailFragment"
         android:label="Musician Detail">
         <argument
             android:name="musicianId"
@@ -76,5 +79,11 @@
         android:name="com.uniandes.vinilos.ui.album.AddAlbumFragment"
         android:label="Add Album"
         tools:layout="@layout/fragment_add_album" />
+
+    <fragment
+        android:id="@+id/AddArtistFragment"
+        android:name="com.uniandes.vinilos.ui.artist.AddArtistFragment"
+        android:label="Add Artist"
+        tools:layout="@layout/fragment_add_artist" />
 
 </navigation> 
