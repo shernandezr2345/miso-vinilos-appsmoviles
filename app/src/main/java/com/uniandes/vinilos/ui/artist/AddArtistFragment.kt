@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.uniandes.vinilos.R
 import com.uniandes.vinilos.viewmodel.AddArtistViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,40 +39,51 @@ class AddArtistFragment : Fragment() {
             val imageUrl = view.findViewById<TextInputEditText>(R.id.imageUrlEditText).text.toString()
             val birthDate = view.findViewById<TextInputEditText>(R.id.birthDateEditText).text.toString()
             val description = view.findViewById<TextInputEditText>(R.id.descriptionEditText).text.toString()
-
-            if (validateInputs(name, imageUrl, birthDate, description)) {
+            if (validateInputs(view, name, imageUrl, birthDate, description)) {
                 viewModel.createArtist(name, imageUrl, birthDate, description)
             }
         }
     }
-
     private fun validateInputs(
+        view: View,
         name: String,
         imageUrl: String,
         birthDate: String,
         description: String
     ): Boolean {
         if (name.isBlank()) {
-            showError("El nombre del artista es requerido")
+            showError(
+                view.findViewById<TextInputLayout>(R.id.nameTextInputLayout),
+                "El nombre del artista es requerido"
+            )
             return false
         }
         if (imageUrl.isBlank()) {
-            showError("La URL de la imagen es requerida")
+            showError(
+                view.findViewById<TextInputLayout>(R.id.imageUrlTextInputLayout),
+                "La URL de la imagen es requerida"
+            )
             return false
         }
         if (birthDate.isBlank()) {
-            showError("La fecha de nacimiento es requerida")
+            showError(
+                view.findViewById<TextInputLayout>(R.id.birthDateTextInputLayout),
+                "La fecha de nacimiento es requerida"
+            )
             return false
         }
         if (description.isBlank()) {
-            showError("La descripción es requerida")
+            showError(
+                view.findViewById<TextInputLayout>(R.id.descriptionTextInputLayout),
+                "La descripción es requerida"
+            )
             return false
         }
         return true
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    private fun showError(field: TextInputLayout, message: String) {
+        field.error = message
     }
 
     private fun observeViewModel() {
@@ -80,8 +92,11 @@ class AddArtistFragment : Fragment() {
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
-            error?.let {
-                showError(it)
+            error?.let { message ->
+                // Show error via Snackbar instead of Toast
+                view?.let { rootView ->
+                    Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show()
+                }
             }
         }
 
