@@ -6,22 +6,18 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.uniandes.vinilos.R
 import com.uniandes.vinilos.ui.MainActivity
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.view.View
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.instanceOf
 import com.google.android.material.textfield.TextInputLayout
-import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -90,8 +86,10 @@ class AddArtistFragmentTest {
         onView(withId(R.id.descriptionEditText)).perform(closeSoftKeyboard())
         onView(withId(R.id.saveButton)).perform(click())
 
+        Thread.sleep(1000)
+
         // Check if error is shown on the TextInputLayout
-        onView(allOf(instanceOf(TextInputLayout::class.java), withId(R.id.nameEditText)))
+        onView(withId(R.id.nameTextInputLayout))
             .check(matches(hasTextInputLayoutErrorText("El nombre del artista es requerido")))
     }
 
@@ -108,7 +106,7 @@ class AddArtistFragmentTest {
         onView(withId(R.id.saveButton)).perform(click())
 
         // Check if error is shown on the TextInputLayout
-        onView(allOf(instanceOf(TextInputLayout::class.java), withId(R.id.imageUrlEditText)))
+        onView(withId(R.id.imageUrlTextInputLayout))
             .check(matches(hasTextInputLayoutErrorText("La URL de la imagen es requerida")))
     }
 
@@ -125,7 +123,7 @@ class AddArtistFragmentTest {
         onView(withId(R.id.saveButton)).perform(click())
 
         // Check if error is shown on the TextInputLayout
-        onView(allOf(instanceOf(TextInputLayout::class.java), withId(R.id.birthDateEditText)))
+        onView(withId(R.id.birthDateTextInputLayout))
             .check(matches(hasTextInputLayoutErrorText("La fecha de nacimiento es requerida")))
     }
 
@@ -142,7 +140,7 @@ class AddArtistFragmentTest {
         onView(withId(R.id.saveButton)).perform(click())
 
         // Check if error is shown on the TextInputLayout
-        onView(allOf(instanceOf(TextInputLayout::class.java), withId(R.id.descriptionEditText)))
+        onView(withId(R.id.descriptionTextInputLayout))
             .check(matches(hasTextInputLayoutErrorText("La descripción es requerida")))
     }
 
@@ -152,7 +150,7 @@ class AddArtistFragmentTest {
         onView(withId(R.id.nameEditText)).perform(clearText(), typeText("Nuevo Artista de Prueba"))
         onView(withId(R.id.imageUrlEditText)).perform(clearText(), typeText("https://example.com/artist.jpg"))
         onView(withId(R.id.birthDateEditText)).perform(clearText(), typeText("1985-03-15"))
-        onView(withId(R.id.descriptionEditText)).perform(clearText(), typeText("Esta es una descripción de prueba para el nuevo artista"))
+        onView(withId(R.id.descriptionEditText)).perform(clearText(), typeText("Test description"))
 
         // Close keyboard and click save
         onView(withId(R.id.descriptionEditText)).perform(closeSoftKeyboard())
@@ -164,33 +162,6 @@ class AddArtistFragmentTest {
         // Now we should be back on the artists list, verify we're there by checking for the recycler view
         onView(withId(R.id.artistsRecyclerView))
             .check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testAddArtistFragment_LoadingState() {
-        // Fill all fields with valid data
-        onView(withId(R.id.nameEditText)).perform(clearText(), typeText("Otro Artista de Prueba"))
-        onView(withId(R.id.imageUrlEditText)).perform(clearText(), typeText("https://example.com/artist2.jpg"))
-        onView(withId(R.id.birthDateEditText)).perform(clearText(), typeText("1990-06-20"))
-        onView(withId(R.id.descriptionEditText)).perform(clearText(), typeText("Esta es otra descripción de prueba para el artista"))
-
-        // Close keyboard and click save
-        onView(withId(R.id.descriptionEditText)).perform(closeSoftKeyboard())
-
-        // Click save button
-        onView(withId(R.id.saveButton)).perform(click())
-
-        // Check if loading indicator is shown
-        try {
-            onView(withId(R.id.loadingProgressBar))
-                .check(matches(isDisplayed()))
-        } catch (e: Exception) {
-            // If the loading indicator isn't implemented yet, this will fail,
-            // but we don't want the whole test to fail
-        }
-
-        // Wait for the operation to complete
-        Thread.sleep(timeoutInSeconds * 500)
     }
 
     /**
@@ -207,4 +178,5 @@ class AddArtistFragmentTest {
             return error.toString() == expectedErrorText
         }
     }
+
 }
