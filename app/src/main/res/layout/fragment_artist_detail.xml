@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:contentDescription="Cargando"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +23,7 @@
         android:layout_margin="16dp"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="gone"
+        android:contentDescription="Mensaje de error"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
                 tools:src="@tools:sample/backgrounds/scenic" />
 
             <TextView
@@ -53,7 +57,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Artista"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Título de la sección artista" />
 
             <TextView
                 android:id="@+id/artistNameTextView"
@@ -62,6 +67,7 @@
                 android:layout_marginTop="4dp"
                 android:textStyle="italic"
                 android:textSize="18sp"
+                android:contentDescription="Nombre del artista"
                 tools:text="Shakira" />
             
             <TextView
@@ -71,7 +77,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Fecha de nacimiento"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Título de la sección fecha de nacimiento" />
 
             <TextView
                 android:id="@+id/birthDateTextView"
@@ -79,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textSize="16sp"
+                android:contentDescription="Fecha de nacimiento del artista"
                 tools:text="AAAA-MM-DD" />
 
             <TextView
@@ -88,7 +96,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Biografia"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Título de la sección biografía" />
 
             <TextView
                 android:id="@+id/biographyTextView"
@@ -96,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textSize="16sp"
+                android:contentDescription="Biografía del artista"
                 tools:text="Lorem ipsum dolor sit amet, consectetur serunt mollit anim id est laborum" />
 
             <TextView
@@ -104,13 +114,15 @@
                 android:layout_marginTop="16dp"
                 android:text="Albums"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Título de la sección álbumes" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/albumsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="Lista de álbumes del artista"
                 tools:itemCount="3"
                 tools:listitem="@layout/item_album" />
 
@@ -120,13 +132,15 @@
                 android:layout_marginTop="16dp"
                 android:text="Performers"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:contentDescription="Título de la sección intérpretes" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/performersPrizesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:contentDescription="Lista de premios del artista"
                 tools:itemCount="2"
                 tools:listitem="@layout/item_performer_prize" />
 

@@ -7,8 +7,8 @@ enum class UserRole {
     companion object {
         fun fromString(role: String): UserRole {
             return when (role.lowercase()) {
-                "visitante" -> VISITOR
-                "colleccionista" -> COLLECTOR
+                "visitante", "visitor" -> VISITOR
+                "coleccionista", "collector" -> COLLECTOR
                 else -> VISITOR // default role
             }
         }

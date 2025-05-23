@@ -2,6 +2,7 @@ package com.uniandes.vinilos.network
 
 import com.uniandes.vinilos.models.Album
 import com.uniandes.vinilos.models.Track
+import com.uniandes.vinilos.models.CreateAlbumRequest
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -16,7 +17,7 @@ interface AlbumService {
     suspend fun getAlbumTracks(@Path("id") id: Int): Response<List<Track>>
 
     @POST("albums")
-    suspend fun createAlbum(@Body album: Album): Response<Album>
+    suspend fun createAlbum(@Body album: CreateAlbumRequest): Response<Album>
 
     @PUT("albums/{id}")
     suspend fun updateAlbum(@Path("id") id: Int, @Body album: Album): Response<Album>

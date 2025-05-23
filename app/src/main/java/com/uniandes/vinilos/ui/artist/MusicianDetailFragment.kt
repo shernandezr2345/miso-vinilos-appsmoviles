@@ -1,7 +1,6 @@
-package com.uniandes.vinilos.ui.Artist
+package com.uniandes.vinilos.ui.artist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -38,8 +38,8 @@ class MusicianDetailFragment : Fragment() {
     private val glideOptions by lazy {
         RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .placeholder(R.drawable.ic_album_placeholder)
-            .error(R.drawable.ic_album_placeholder)
+            .placeholder(R.drawable.album_placeholder)
+            .error(R.drawable.album_placeholder)
     }
 
     override fun onCreateView(
@@ -70,8 +70,12 @@ class MusicianDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        // Inicializar adapters con funciones de lista inmutables
-        albumsAdapter = AlbumAdapter()
+        albumsAdapter = AlbumAdapter { album ->
+            val bundle = Bundle().apply {
+                putInt("albumId", album.id)
+            }
+            findNavController().navigate(R.id.action_musicianDetailFragment_to_albumDetailFragment, bundle)
+        }
         performersPrizesAdapter = PerformerPrizesAdapter()
 
         // Configurar RecyclerViews con setHasFixedSize para optimizar rendimiento
@@ -126,28 +130,46 @@ class MusicianDetailFragment : Fragment() {
 }
 
 // Optimizar Adapter con DiffUtil para actualización eficiente
-class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
+class AlbumAdapter(
+    private val onAlbumClick: (Album) -> Unit
+) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
     private var albums: List<Album> = emptyList()
 
     // Usar ViewBinding o view caching para mejorar rendimiento
-    class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nameTextView: TextView = itemView.findViewById(R.id.albumTitle)
-        private val imageView: ImageView = itemView.findViewById(R.id.albumCover)
+    override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
+        val album = albums[position]
+        holder.bind(album)
+    }
 
-        // RequestOptions reutilizables para Glide
-        private val glideOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .placeholder(R.drawable.ic_performer_placeholder)
-            .error(R.drawable.ic_performer_placeholder)
+    inner class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val albumCoverImageView: ImageView = itemView.findViewById(R.id.albumCoverImageView)
+        private val albumNameTextView: TextView = itemView.findViewById(R.id.albumNameTextView)
+        private val albumArtistTextView: TextView = itemView.findViewById(R.id.albumArtistTextView)
+        private val albumGenreTextView: TextView = itemView.findViewById(R.id.albumGenreTextView)
 
         fun bind(album: Album) {
-            nameTextView.text = album.name
-
-            // Optimizar carga de imágenes
-            Glide.with(itemView.context)
+            albumNameTextView.text = album.name
+            val artistName = album.performers?.firstOrNull()?.name ?: "Artista desconocido"
+            albumArtistTextView.text = artistName
+            albumGenreTextView.text = album.genre
+            
+            // Load album cover image
+            Glide.with(albumCoverImageView.context)
                 .load(album.cover)
-                .apply(glideOptions)
-                .into(imageView)
+                .placeholder(R.drawable.album_placeholder)
+                .error(R.drawable.album_placeholder)
+                .into(albumCoverImageView)
+
+            // Set content descriptions for accessibility
+            albumCoverImageView.contentDescription = "Portada del álbum ${album.name}"
+            albumNameTextView.contentDescription = "Nombre del álbum: ${album.name}"
+            albumArtistTextView.contentDescription = "Artista: $artistName"
+            albumGenreTextView.contentDescription = "Género: ${album.genre}"
+
+            // Set click listener
+            itemView.setOnClickListener {
+                onAlbumClick(album)
+            }
         }
     }
 
@@ -166,10 +188,6 @@ class AlbumAdapter : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_album, parent, false)
         return AlbumViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(albums[position])
     }
 
     override fun getItemCount() = albums.size

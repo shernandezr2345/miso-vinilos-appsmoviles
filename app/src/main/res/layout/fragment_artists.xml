@@ -11,6 +11,7 @@
         android:text="Explora Artistas"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:contentDescription="Título de la lista de artistas"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="Lista de artistas"
         app:layout_constraintTop_toBottomOf="@id/searchMusicianEditText"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -40,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:contentDescription="Indicador de carga"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +54,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="gone"
+        android:contentDescription="Mensaje de error"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

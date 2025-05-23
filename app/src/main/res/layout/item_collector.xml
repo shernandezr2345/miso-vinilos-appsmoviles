@@ -60,13 +60,33 @@
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false" />
 
-        <TextView
+        <!-- Albums title and add button row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:text="Albums"
-            android:textStyle="bold" />
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/albums_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Albums"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/button_add_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="Add album"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Albums list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/albums_recycler_view"
             android:layout_width="match_parent"

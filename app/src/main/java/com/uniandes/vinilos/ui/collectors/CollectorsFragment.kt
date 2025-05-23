@@ -1,31 +1,53 @@
 package com.uniandes.vinilos.ui.collectors
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
+import android.widget.ImageButton
+import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.uniandes.vinilos.R
+import com.uniandes.vinilos.data.dao.ApiAlbumDao
 import com.uniandes.vinilos.models.Collector
 import com.uniandes.vinilos.models.CollectorAlbum
 import com.uniandes.vinilos.models.Comment
 import com.uniandes.vinilos.models.Performer
+import com.uniandes.vinilos.utils.UserSession
 import com.uniandes.vinilos.viewmodel.CollectorViewModel
+import com.uniandes.vinilos.viewmodel.AlbumListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.uniandes.vinilos.data.repository.AlbumRepository
+import com.uniandes.vinilos.models.Album
+import androidx.lifecycle.LifecycleOwner
 
 @AndroidEntryPoint
 class CollectorsFragment : Fragment() {
     private val viewModel: CollectorViewModel by viewModels()
+    private val albumListViewModel: AlbumListViewModel by viewModels()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var searchView: SearchView
+    private lateinit var searchEditText: EditText
     private var albumsMap: Map<Int, List<CollectorAlbum>> = emptyMap()
+    private var allAlbums: List<Album> = emptyList()
+    private var collectorAdapter: CollectorAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,25 +63,33 @@ class CollectorsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.collectors_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        searchView = view.findViewById(R.id.search_view)
+        searchEditText = view.findViewById(R.id.searchEditText)
         setupSearchView()
+
+        albumListViewModel.albums.observe(viewLifecycleOwner) { albums ->
+            allAlbums = albums
+            collectorAdapter?.updateAllAlbums(albums)
+        }
+        albumListViewModel.loadAlbums()
 
         viewModel.collectorAlbums.observe(viewLifecycleOwner) { map ->
             albumsMap = map
-            (recyclerView.adapter as? CollectorAdapter)?.updateAlbumsMap(map)
+            collectorAdapter?.updateAlbumsMap(map)
         }
 
         viewModel.collectors.observe(viewLifecycleOwner) { collectors ->
-            recyclerView.adapter = CollectorAdapter(collectors, albumsMap) { collector ->
-                // Handle collector click if needed
-            }
+            collectorAdapter = CollectorAdapter(
+                collectors, albumsMap, viewModel, viewLifecycleOwner, allAlbums,
+                onAlbumAdded = { viewModel.fetchCollectors() }
+            ) { _ -> }
+            recyclerView.adapter = collectorAdapter
         }
 
-        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.loading.observe(viewLifecycleOwner) { _ ->
             // Handle loading state
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { error ->
+        viewModel.error.observe(viewLifecycleOwner) { _ ->
             // Handle error state
         }
 
@@ -67,14 +97,11 @@ class CollectorsFragment : Fragment() {
     }
 
     private fun setupSearchView() {
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                (recyclerView.adapter as? CollectorAdapter)?.filter(newText.orEmpty())
-                return true
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                (recyclerView.adapter as? CollectorAdapter)?.filter(s?.toString() ?: "")
             }
         })
     }
@@ -83,15 +110,24 @@ class CollectorsFragment : Fragment() {
 class CollectorAdapter(
     private var collectors: List<Collector>,
     private var albumsMap: Map<Int, List<CollectorAlbum>>,
+    private val viewModel: CollectorViewModel,
+    private val lifecycleOwner: LifecycleOwner,
+    private var allAlbums: List<Album>,
+    private val onAlbumAdded: () -> Unit,
     private val onCollectorClick: (Collector) -> Unit
 ) : RecyclerView.Adapter<CollectorAdapter.CollectorViewHolder>() {
 
     private var filteredCollectors = collectors
 
+    fun updateAllAlbums(newAlbums: List<Album>) {
+        allAlbums = newAlbums
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectorViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_collector, parent, false)
-        return CollectorViewHolder(view)
+        return CollectorViewHolder(view, allAlbums, viewModel, lifecycleOwner, onAlbumAdded)
     }
 
     override fun onBindViewHolder(holder: CollectorViewHolder, position: Int) {
@@ -119,13 +155,20 @@ class CollectorAdapter(
         notifyDataSetChanged()
     }
 
-    class CollectorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CollectorViewHolder(
+        itemView: View,
+        private val allAlbums: List<Album>,
+        private val viewModel: CollectorViewModel,
+        private val lifecycleOwner: LifecycleOwner,
+        private val onAlbumAdded: () -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.collector_name)
         private val emailTextView: TextView = itemView.findViewById(R.id.collector_email)
         private val phoneTextView: TextView = itemView.findViewById(R.id.collector_phone)
         private val commentsRecyclerView: RecyclerView = itemView.findViewById(R.id.comments_recycler_view)
         private val performersRecyclerView: RecyclerView = itemView.findViewById(R.id.performers_recycler_view)
         private val albumsRecyclerView: RecyclerView = itemView.findViewById(R.id.albums_recycler_view)
+        private val addAlbumButton: ImageButton = itemView.findViewById(R.id.button_add_album)
 
         fun bind(collector: Collector, albums: List<CollectorAlbum>) {
             nameTextView.text = collector.name
@@ -143,6 +186,51 @@ class CollectorAdapter(
             // Setup albums recycler view
             albumsRecyclerView.layoutManager = LinearLayoutManager(itemView.context)
             albumsRecyclerView.adapter = CollectorAlbumAdapter(albums)
+
+            // Show add album button only for collectors
+            val userSession = UserSession(itemView.context.applicationContext)
+            if (userSession.isCollector()) {
+                addAlbumButton.visibility = View.VISIBLE
+                addAlbumButton.setOnClickListener {
+                    showAddAlbumDialog(collector.id)
+                }
+            } else {
+                addAlbumButton.visibility = View.GONE
+            }
+        }
+
+        private fun showAddAlbumDialog(collectorId: Int) {
+            val context = itemView.context
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_album_to_collector, null)
+            val spinner = dialogView.findViewById<Spinner>(R.id.albumSpinner)
+
+            val dialog = AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            val albumNames = allAlbums.map { it.name }
+            val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, albumNames)
+            spinner.adapter = adapter
+
+            dialogView.findViewById<View>(R.id.submitButton).setOnClickListener {
+                val selectedPosition = spinner.selectedItemPosition
+                if (selectedPosition != -1) {
+                    val selectedAlbum = allAlbums[selectedPosition]
+                    viewModel.addAlbumToCollector(collectorId, selectedAlbum.id)
+                    viewModel.addAlbumResult.observe(lifecycleOwner) { success ->
+                        if (success) {
+                            Toast.makeText(context, "Album added!", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                            onAlbumAdded()
+                        } else {
+                            Toast.makeText(context, "Failed to add album", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        }
+                    }
+                }
+            }
+            dialog.show()
         }
     }
 }
@@ -223,7 +311,6 @@ class CollectorAlbumAdapter(private val collectorAlbums: List<CollectorAlbum>) :
         private val coverImageView: ImageView = itemView.findViewById(R.id.album_cover)
 
         fun bind(collectorAlbum: CollectorAlbum) {
-            println("collectorAlbum: $collectorAlbum")
             // Handle null album case
             if (collectorAlbum.album == null) {
                 nameTextView.text = "Unknown Album"

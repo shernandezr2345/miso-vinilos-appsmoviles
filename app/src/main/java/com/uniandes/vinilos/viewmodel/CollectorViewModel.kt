@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.uniandes.vinilos.models.Collector
 import com.uniandes.vinilos.models.CollectorAlbum
 import com.uniandes.vinilos.repositories.CollectorRepository
+import com.uniandes.vinilos.data.dao.AddAlbumToCollectorBody
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -28,6 +29,9 @@ class CollectorViewModel @Inject constructor(
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
+
+    private val _addAlbumResult = MutableLiveData<Boolean>()
+    val addAlbumResult: LiveData<Boolean> = _addAlbumResult
 
     fun fetchCollectors() {
         viewModelScope.launch {
@@ -81,6 +85,18 @@ class CollectorViewModel @Inject constructor(
                 }
             }.awaitAll().toMap()
             _collectorAlbums.value = albumsMap
+        }
+    }
+
+    fun addAlbumToCollector(collectorId: Int, albumId: Int) {
+        viewModelScope.launch {
+            try {
+                val body = AddAlbumToCollectorBody(price = 25000, status = "Active")
+                val response = repository.addAlbumToCollector(collectorId, albumId, body)
+                _addAlbumResult.value = response.isSuccessful
+            } catch (e: Exception) {
+                _addAlbumResult.value = false
+            }
         }
     }
 } 

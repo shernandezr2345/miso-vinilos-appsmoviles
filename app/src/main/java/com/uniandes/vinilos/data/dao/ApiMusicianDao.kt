@@ -1,5 +1,7 @@
 package com.uniandes.vinilos.data.dao
 
+import com.uniandes.vinilos.models.Album
+import com.uniandes.vinilos.models.CreateArtistRequest
 import com.uniandes.vinilos.models.Musician
 import com.uniandes.vinilos.network.MusicianService
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -34,6 +36,10 @@ class ApiMusicianDao @Inject constructor(
         } catch (e: Exception) {
             null
         }
+    }
+
+    suspend fun createArtist(musician: CreateArtistRequest): Musician? {
+        return musicianService.createMusicians(musician).body()
     }
     
 
