@@ -67,7 +67,7 @@ class CollectorsFragmentTest {
             .check(matches(hasMinimumChildCount(1)))
     }
 
-   
+
 
     // Helper to click a child view in a RecyclerView item
     private fun clickOnViewChild(viewId: Int) = object : androidx.test.espresso.ViewAction {
