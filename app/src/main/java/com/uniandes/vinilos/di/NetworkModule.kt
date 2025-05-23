@@ -23,7 +23,7 @@ object NetworkModule {
 
 
   private const val BASE_URL = "http://146.190.65.12:3000/"
-  private const val BASE_URL = "http://146.190.65.12:3000"
+  //private const val BASE_URL = "http://146.190.65.12:3000"
 
 
     @Provides

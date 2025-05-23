@@ -16,8 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.SearchView
-    android:id="@+id/search_view"
+
 
     <EditText
         android:id="@+id/searchEditText"
