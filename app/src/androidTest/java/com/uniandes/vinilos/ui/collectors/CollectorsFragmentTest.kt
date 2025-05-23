@@ -18,6 +18,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import org.hamcrest.Matchers.allOf
+import android.view.View
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -59,12 +67,15 @@ class CollectorsFragmentTest {
             .check(matches(hasMinimumChildCount(1)))
     }
 
-//    @Test
-//    fun testCollectorsFragment_ItemClick() {
-//        // Optionally click on the first collector (if you have a detail screen, add checks here)
-//        onView(withId(R.id.collectors_recycler_view))
-//            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-//        // Add assertions here if clicking opens a detail view
-//        Thread.sleep(1000)
-//    }
+   
+
+    // Helper to click a child view in a RecyclerView item
+    private fun clickOnViewChild(viewId: Int) = object : androidx.test.espresso.ViewAction {
+        override fun getConstraints() = null
+        override fun getDescription() = "Click on a child view with specified id."
+        override fun perform(uiController: androidx.test.espresso.UiController?, view: View?) {
+            val v = view?.findViewById<View>(viewId)
+            v?.performClick()
+        }
+    }
 } 
