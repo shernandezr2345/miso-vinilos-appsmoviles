@@ -1,5 +1,8 @@
 package com.uniandes.vinilos.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Album(
     val id: Int,
     val name: String,
